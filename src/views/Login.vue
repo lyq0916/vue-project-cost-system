@@ -1,7 +1,7 @@
 <template>
     <div class="login-wrap">
         <div class="ms-login">
-            <div class="ms-title">后台管理系统</div>
+            <div class="ms-title">工程成本分析系统</div>
             <el-form :model="param" :rules="rules" ref="login" label-width="0px" class="ms-content">
                 <el-form-item prop="username">
                     <el-input v-model="param.username" placeholder="username">
@@ -21,25 +21,25 @@
                 <div class="login-btn">
                     <el-button type="primary" @click="submitForm()">登录</el-button>
                 </div>
-                <p class="login-tips">Tips : 用户名和密码随便填。</p>
             </el-form>
         </div>
     </div>
 </template>
 
 <script>
-import { ref, reactive } from "vue";
+import {ref, reactive, getCurrentInstance} from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 
 export default {
-    setup() {
+    setup(props,ctx) {
         const router = useRouter();
         const param = reactive({
             username: "admin",
-            password: "123123",
+            password: "123",
         });
+
 
         const rules = {
             username: [
@@ -54,8 +54,47 @@ export default {
             ],
         };
         const login = ref(null);
-        const submitForm = () => {
-            login.value.validate((valid) => {
+        const { proxy } =getCurrentInstance()
+
+      const currentInstance = getCurrentInstance()
+      const { $http, $message, $route } = currentInstance.appContext.config.globalProperties
+
+      function submitForm(){
+          $http.post("/login",{
+            username: param.username,
+            password: param.password
+          }).then(res=>{
+            console.log(res)
+            if(res.data.code===200){
+              ElMessage.success("登录成功");
+              localStorage.setItem("ms_username", param.username);
+              router.push("/dashboard");
+            }else{
+              ElMessage.error("登录失败");
+              return false;
+            }
+          })
+      }
+
+       /* submitForm(()=>{
+          proxy.$http.post("/login",{
+                username:this.param.username,
+                password: this.param.password
+              }).then(res =>{
+            console.log(res)
+            if(res.data.code===200){
+              ElMessage.success("登录成功");
+              localStorage.setItem("ms_username", param.username);
+              router.push("/dashboard");
+            }else {
+              ElMessage.error("登录失败");
+              return false;
+            }
+              }
+          )
+      })*/
+     /*   const submitForm = () => {
+            /!*login.value.validate((valid) => {
                 if (valid) {
                     ElMessage.success("登录成功");
                     localStorage.setItem("ms_username", param.username);
@@ -64,9 +103,27 @@ export default {
                     ElMessage.error("登录成功");
                     return false;
                 }
-            });
+            });*!/
+          console.log(this)
+          this.$h.post('/login', {
+            username:this.param.username,
+            password: this.param.password
+          })
+          .then(success => {
+            if(success.data.code===200){
+              ElMessage.success("登录成功");
+              localStorage.setItem("ms_username", param.username);
+              router.push("/dashboard");
+            }else {
+              ElMessage.error("登录失败");
+              return false;
+            }
+          }).catch(failure => {
+            ElMessage.error("登录失败");
+            return false;
+          })
         };
-
+*/
         const store = useStore();
         store.commit("clearTags");
 

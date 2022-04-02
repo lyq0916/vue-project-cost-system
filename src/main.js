@@ -10,7 +10,7 @@ import axios from 'axios'
 axios.defaults.baseURL="http://localhost:8443/api"
 
 const app = createApp(App)
-app.config.globalProperties.$h=axios
+app.config.globalProperties.$http=axios
 
 installElementPlus(app)
 app

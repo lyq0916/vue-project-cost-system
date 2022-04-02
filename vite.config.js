@@ -28,7 +28,6 @@ import vue from '@vitejs/plugin-vue'
 * */
 export default {
    server: {
-       port: 8080,
        /* 自动打开浏览器 */
        open: true,
        /* 使用代理 */
