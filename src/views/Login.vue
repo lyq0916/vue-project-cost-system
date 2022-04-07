@@ -35,9 +35,11 @@ import { ElMessage } from "element-plus";
 export default {
     setup(props,ctx) {
         const router = useRouter();
+        const store = useStore();
         const param = reactive({
             username: "admin",
             password: "123",
+            photo: ""
         });
 
 
@@ -54,7 +56,6 @@ export default {
             ],
         };
         const login = ref(null);
-        const { proxy } =getCurrentInstance()
 
       const currentInstance = getCurrentInstance()
       const { $http, $message, $route } = currentInstance.appContext.config.globalProperties
@@ -65,10 +66,20 @@ export default {
             password: param.password
           }).then(res=>{
             console.log(res)
+            console.log(res.data)
             if(res.data.code===200){
               ElMessage.success("登录成功");
-              localStorage.setItem("ms_username", param.username);
+              localStorage.setItem("username", param.username);
               router.push("/dashboard");
+
+              //登录成功后把用户信息查出来放进store中
+              $http.post("/getusr", {
+                username: param.username,
+                password: param.password
+              }).then(res=>{
+                console.log(res.data)
+                store.commit('login',res.data)
+              })
             }else{
               ElMessage.error("登录失败");
               return false;
@@ -124,7 +135,6 @@ export default {
           })
         };
 */
-        const store = useStore();
         store.commit("clearTags");
 
         return {

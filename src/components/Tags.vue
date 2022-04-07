@@ -115,9 +115,9 @@ export default {
     position: relative;
     height: 30px;
     overflow: hidden;
-    background: #fff;
+    background: #324157;
     padding-right: 120px;
-    box-shadow: 0 5px 10px #ddd;
+    /*box-shadow: 0 5px 10px #ddd;*/
 }
 
 .tags ul {
@@ -135,22 +135,22 @@ export default {
     cursor: pointer;
     height: 23px;
     line-height: 23px;
-    border: 1px solid #e9eaec;
-    background: #fff;
+    border: 1px solid #324157;
+    background: #324157;
     padding: 0 5px 0 12px;
     vertical-align: middle;
-    color: #666;
+    color: #f0f0f0;
     -webkit-transition: all 0.3s ease-in;
     -moz-transition: all 0.3s ease-in;
     transition: all 0.3s ease-in;
 }
 
 .tags-li:not(.active):hover {
-    background: #f8f8f8;
+    background: #324157;
 }
 
 .tags-li.active {
-    color: #fff;
+    color: #324157;
 }
 
 .tags-li-title {
@@ -160,11 +160,11 @@ export default {
     white-space: nowrap;
     text-overflow: ellipsis;
     margin-right: 5px;
-    color: #666;
+    color: #f0f0f0;
 }
 
 .tags-li.active .tags-li-title {
-    color: #fff;
+    color: #324157;
 }
 
 .tags-close-box {
@@ -176,7 +176,7 @@ export default {
     text-align: center;
     width: 110px;
     height: 30px;
-    background: #fff;
+    background: #324157;
     box-shadow: -3px 0 15px 3px rgba(0, 0, 0, 0.1);
     z-index: 10;
 }

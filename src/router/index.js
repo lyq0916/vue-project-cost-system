@@ -110,6 +110,20 @@ const routes = [
                     title: '富文本编辑器'
                 },
                 component: () => import (/* webpackChunkName: "editor" */ '../views/Editor.vue')
+            }, {
+                path: '/project',
+                name: 'project',
+                meta: {
+                    title: '项目可视化'
+                },
+                component: () => import ('../views/Project.vue')
+            }, {
+                path: '/projectadd',
+                name: 'projectadd',
+                meta:{
+                    title: '新建项目'
+                },
+                component: () => import ('../views/ProjectAdd.vue')
             }
         ]
     }, {

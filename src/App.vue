@@ -3,7 +3,14 @@
 </template>
 
 <script>
-export default {};
+import * as echarts from 'echarts'
+import { provide } from 'vue'
+export default {
+  name:'App',
+  setup() {
+      provide('ec',echarts)
+    },
+};
 </script>
 
 <style>

@@ -3,9 +3,16 @@ import {createStore} from 'vuex'
 export default createStore({
     state: {
         tagsList: [],
-        collapse: false
+        collapse: false,
+        username: window.sessionStorage.getItem('user' || '[]') == null ? '' : JSON.parse(window.localStorage.getItem('user' || '[]')).username,
+        user: window.sessionStorage.getItem('user' || '[]') == null ? '' : JSON.parse(window.localStorage.getItem('user' || '[]'))
     },
     mutations: {
+        login (state, user) {
+            state.user = user
+            //console.log(user)
+            window.sessionStorage.setItem('user', JSON.stringify(user))
+        },
         delTagsItem(state, data) {
             state
                 .tagsList

@@ -42,3 +42,10 @@ export default {
     },
 };
 </script>
+
+<style>
+.content{
+  background-color:#324157;
+}
+
+</style>
