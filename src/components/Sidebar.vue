@@ -46,6 +46,21 @@ export default {
         title: "系统首页",
       },
       {
+        icon: "el-icon-lx-crown",
+        index: "9",
+        title: "项目管理",
+        subs: [
+          {
+            index: "/projectadd",
+            title: "新建项目",
+          },
+          {
+            index: "/project",
+            title: "项目可视化",
+          },
+        ]
+      },
+      {
         icon: "el-icon-lx-cascades",
         index: "/table",
         title: "基础表格",
@@ -115,21 +130,6 @@ export default {
         index: "/donate",
         title: "支持作者",
       },
-      {
-        icon: "el-icon-lx-crown",
-        index: "9",
-        title: "项目管理",
-        subs: [
-          {
-            index: "/projectadd",
-            title: "新建项目",
-          },
-          {
-            index: "/project",
-            title: "项目可视化",
-          },
-        ]
-      }
     ];
 
     const route = useRoute();

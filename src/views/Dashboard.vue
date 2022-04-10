@@ -137,6 +137,7 @@ export default {
       //let m=await import(store.state.user.photo);
       imgUrl.value=store.state.user.photo;
       console.log(store.state.user.photo)
+
     }
 
     onMounted(()=>{

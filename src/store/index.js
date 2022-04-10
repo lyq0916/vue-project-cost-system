@@ -4,8 +4,8 @@ export default createStore({
     state: {
         tagsList: [],
         collapse: false,
-        username: window.sessionStorage.getItem('user' || '[]') == null ? '' : JSON.parse(window.localStorage.getItem('user' || '[]')).username,
-        user: window.sessionStorage.getItem('user' || '[]') == null ? '' : JSON.parse(window.localStorage.getItem('user' || '[]'))
+        username: window.sessionStorage.getItem('user' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('user' || '[]')).username,
+        user: window.sessionStorage.getItem('user' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('user' || '[]'))
     },
     mutations: {
         login (state, user) {
