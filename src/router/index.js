@@ -88,14 +88,14 @@ const routes = [
                 meta: {
                     title: '找不到页面'
                 },
-                component: () => import (/* webpackChunkName: "404" */ '../views/404.vue')
+                component: () => import (/* webpackChunkName: "404" */ '../views/error/404.vue')
             }, {
                 path: '/403',
                 name: '403',
                 meta: {
                     title: '没有权限'
                 },
-                component: () => import (/* webpackChunkName: "403" */ '../views/403.vue')
+                component: () => import (/* webpackChunkName: "403" */ '../views/error/403.vue')
             }, {
                 path: '/user',
                 name: 'user',
@@ -114,16 +114,23 @@ const routes = [
                 path: '/project',
                 name: 'project',
                 meta: {
-                    title: '项目可视化'
+                    title: '可视化面板'
                 },
-                component: () => import ('../views/Project.vue')
+                component: () => import ('../views/project/Project.vue')
             }, {
                 path: '/projectadd',
                 name: 'projectadd',
-                meta:{
+                meta: {
                     title: '新建项目'
                 },
-                component: () => import ('../views/ProjectAdd.vue')
+                component: () => import ('../views/project/ProjectAdd.vue')
+            }, {
+                path: '/costmaintain',
+                name: 'costmaintain',
+                meta: {
+                    title:'成本维护'
+                },
+                component:() => import('../views/project/CostMaintain.vue')
             }
         ]
     }, {

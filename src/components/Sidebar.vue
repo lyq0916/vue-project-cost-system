@@ -55,8 +55,12 @@ export default {
             title: "新建项目",
           },
           {
+            index: "/costmaintain",
+            title: "成本维护",
+          },
+          {
             index: "/project",
-            title: "项目可视化",
+            title: "可视化面板",
           },
         ]
       },

@@ -7,7 +7,7 @@
 import {getCurrentInstance, onMounted} from "vue";
 import * as echarts from 'echarts'
 
-import chinaMap from "../assets/json/china.json";
+import chinaMap from "../../assets/json/china.json";
 
 echarts.registerMap('china', chinaMap)
 console.log(echarts.getMap("china"))
