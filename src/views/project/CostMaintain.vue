@@ -1,141 +1,197 @@
 <template>
-  <div class="container">
-    <div class="form-box">
-      <div class="box">
-        <el-button class="new_btn" type="primary" @click="handleNew"
-        >新增
-        </el-button
-        >
-        <el-table :data="studentInfo" border style="width: 100%">
-          <el-table-column prop="name" label="姓名"/>
-          <el-table-column prop="sex" label="性别"/>
-          <el-table-column prop="age" label="年龄"/>
-          <el-table-column fixed="right" label="操作">
-            <template #default="{ row }">
-              <el-button type="text" size="small" @click="handleDetail(row)"
-              >查看
-              </el-button
-              >
-              <el-button type="text" size="small" @click="handleEdit(row)"
-              >编辑
-              </el-button
-              >
-              <el-button type="text" size="small" @click="handleDel(row)"
-              >删除
-              </el-button
-              >
-            </template>
-          </el-table-column>
+  <div>
+    <div class="crumbs">
+      <el-breadcrumb separator="/">
+        <el-breadcrumb-item>
+          <i class="el-icon-lx-calendar"></i> 表单
+        </el-breadcrumb-item>
+        <el-breadcrumb-item>成本维护</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
+    <div class="container">
+      <div class="handle-box">
+        <div class="table-header">
+          <el-form :model="form1">
+            <el-form-item>
+              <el-row>
+                <div class="header-left">
+                  <el-date-picker
+                      v-model="form1.date"
+                      type="date"
+                      placeholder="Pick a Date"
+                      format="YYYY-MM-DD"
+                      value-format="YYYY-MM-DD"
+                      style="width: 150px;height:30px;margin: 10px"
+                  />
+                  <el-input v-model="form1.pname" placeholder="输入项目编号" suffix-icon="icon-mya-Group46"
+                            style="width: 150px;height:30px;margin: 10px"></el-input>
+                  <el-button type="primary" @click="search" style="height: 30px ;margin: 10px">搜索</el-button>
+                </div>
+                <div class="header-right">
+                  <el-button type="primary" @click="dialogFormVisible = true" style="height: 30px ;margin: 10px;">新增
+                  </el-button>
+                </div>
+              </el-row>
+            </el-form-item>
+          </el-form>
+        </div>
+        <el-table :data="tableData" border stripe style="width: 100%">
+          <el-table-column prop="id" label="记录编号"/>
+          <el-table-column prop="name" label="名称"/>
+          <el-table-column prop="type" label="支出类型"/>
+          <el-table-column prop="money" label="支出金额(万元)"/>
+          <el-table-column prop="pid" label="项目编号"/>
+          <el-table-column prop="note" label="备注"/>
+          <el-table-column type="date" prop="date" label="记录日期"/>
         </el-table>
-        <!-- 新建/编辑弹框 -->
-        <Dialog
-            v-if="dialogShow"
-            v-model:dialogShow="dialogShow"
-            :rowInfo="rowInfo"
-            :title="title"
-            :arrayNum="studentInfo.length"
-            @addRow="addRow"
-            @editRow="editRow"
-        />
-        <!-- 详情弹窗 -->
-        <Detail v-if="detailShow" :rowInfo="rowInfo" @closeDetail="closeDetail"/>
       </div>
     </div>
+    <!-- 新增成本维护记录 弹出表单对话框-->
+    <el-dialog v-model="dialogFormVisible" title="成本支出记录">
+      <el-form :model="form">
+        <el-form-item label="记录名称" :label-width="formLabelWidth">
+          <el-input v-model="form.name" autocomplete="off"/>
+        </el-form-item>
+        <el-form-item label="支出类型" :label-width="formLabelWidth">
+          <el-select v-model="form.type" placeholder="Please select type">
+            <el-option label="材料费用" value="材料"/>
+            <el-option label="机械设备" value="机械设备"/>
+            <el-option label="人工费用" value="人工"/>
+            <el-option label="间接费用" value="间接支出"/>
+            <el-option label="其他" value="其他"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="支出金额" :label-width="formLabelWidth">
+          <el-input-number v-model="num" :precision="2" :step="0.1"/>
+          <span style="margin-left: 10px">万元</span>
+        </el-form-item>
+        <el-form-item label="项目编号" :label-width="formLabelWidth">
+          <el-input v-model="form.pid"/>
+        </el-form-item>
+        <el-form-item label="备注" :label-width="formLabelWidth">
+          <el-input v-model="form.note" :rows="3" placeholder="Please input"></el-input>
+        </el-form-item>
+        <el-form-item label="支出日期" :label-width="formLabelWidth">
+          <el-date-picker
+              type="date"
+              placeholder="请选择日期"
+              v-model="form.date"
+              value-format="YYYY-MM-DD"
+              format="YYYY-MM-DD"
+              style="width: 250px;">
+          </el-date-picker>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">Cancel</el-button>
+        <el-button type="primary" @click="submitDialog">Confirm</el-button>
+      </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
-<script>
-import {reactive, ref, toRefs} from "vue";
-import {ElMessageBox} from "element-plus";
-import Dialog from "./dialog.vue";
-import Detail from "./detail.vue";
+<script setup>
+import {ref, reactive, getCurrentInstance, shallowReactive} from 'vue'
+import {ElMessage} from "element-plus";
 
-export default {
-  name: "CostMaintain",
-  components: {Dialog, Detail},
-  setup() {
-    const data = reactive({
-      dialogShow: false, // 新增/编辑弹框
-      detailShow: false, // 详情弹窗
-      rowInfo: {}, // 新增/编辑的数据
-      title: "", // 是新建还是修改
-      studentInfo: [
-        {
-          id: 1,
-          name: "星星",
-          sex: "女",
-          age: 18,
-        },
-        {
-          id: 2,
-          name: "月亮",
-          sex: "男",
-          age: 19,
-        },
-      ],
-    });
-    const method = reactive({
-      handleNew() {
-        data.title = "新增";
-        data.rowInfo = {};
-        data.dialogShow = true;
-      },
-      handleDetail(val) {
-        data.detailShow = true;
-        data.rowInfo = val;
-      },
-      handleEdit(val) {
-        data.title = "修改";
-        data.dialogShow = true;
-        data.rowInfo = val;
-      },
-      handleDel(val) {
-        ElMessageBox.confirm("你确定删除这个学生的信息吗?", "提示", {
-          confirmButtonText: "确认",
-          cancelButtonText: "取消",
-          type: "warning",
+const currentInstance = getCurrentInstance();
+const {$http} = currentInstance.appContext.config.globalProperties;
+
+//新增记录 表单数据
+let dialogFormVisible = ref(false)
+const formLabelWidth = '140px'
+const num = ref(1)
+
+const tableData = shallowReactive([]);
+
+$http.get('/costshow').then(res => {
+  for (let i = 0; i < res.data.length; i++) {
+    tableData.push({
+      id: res.data[i].mid,
+      name: res.data[i].name,
+      type: res.data[i].type,
+      money: res.data[i].money,
+      pid: res.data[i].pid,
+      note: res.data[i].note,
+      date: res.data[i].updatedate
+    })
+  }
+})
+
+const form = reactive({
+  name: '',
+  type: '',
+  pid: '',
+  note: '',
+  date: '',
+})
+
+const form1=reactive({
+  date:'',
+  pname:'',
+})
+
+function search() {
+  const date = new Date(Date.parse(form1.date));
+  //console.log(form1.date)
+  $http.get('/searchcost?pname='+form1.pname+'&date='+form1.date,{}).then(res => {
+    tableData.splice(0, tableData.length);
+    for (let i = 0; i < res.data.length; i++) {
+      tableData.push({
+        id: res.data[i].mid,
+        name: res.data[i].name,
+        type: res.data[i].type,
+        money: res.data[i].money,
+        pid: res.data[i].pid,
+        note: res.data[i].note,
+        date: res.data[i].updatedate
+      })
+    }
+  })
+}
+
+function submitDialog() {
+  const date = new Date(Date.parse(form.date));
+  $http.post('/costadd', {
+    name: form.name,
+    type: form.type,
+    money: num.value,
+    pid: form.pid,
+    note: form.note,
+    updatedate: date,
+  }).then((res => {
+    if (res.data.code == 200) {
+      dialogFormVisible = false;
+      ElMessage.success("提交成功");
+      $http.get('/costshow').then(res => {
+        const i = res.data.length - 1;
+        tableData.push({
+          id: res.data[i].mid,
+          name: res.data[i].name,
+          type: res.data[i].type,
+          money: res.data[i].money,
+          pid: res.data[i].pid,
+          note: res.data[i].note,
+          date: res.data[i].updatedate
         })
-            .then(() => {
-              method.handleSure(val);
-            })
-            .catch(() => {
-              // catch error
-            });
-      },
-      handleSure(val) {
-        this.dialogVisible = false;
-        const index = data.studentInfo.findIndex((item) => item.id === val.id);
-        data.studentInfo.splice(index, 1);
-      },
-      // 添加行
-      addRow(val) {
-        data.studentInfo.push(val);
-      },
-      // 编辑行
-      editRow(val) {
-        let index = data.studentInfo.findIndex(
-            (item, index) => item.id === val.id
-        );
-        data.studentInfo.splice(index, 1, val);
-      },
-      // 关闭详情弹窗
-      closeDetail() {
-        data.detailShow = false;
-      },
-    });
-    return {...toRefs(data), ...method};
-  },
-};
+      })
+    } else {
+      ElMessage.error("提交失败");
+    }
+  }))
+}
 </script>
 
 <style>
-.box {
-  padding: 20px;
-  margin: 50px;
+.table-header .header-right {
+  position: absolute;
+  right: 5px;
 }
 
-.new_btn {
-  margin-bottom: 10px;
+.dialog-footer button:first-child {
+  margin-right: 10px;
 }
 
 </style>

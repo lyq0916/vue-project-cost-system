@@ -128,9 +128,16 @@ const routes = [
                 path: '/costmaintain',
                 name: 'costmaintain',
                 meta: {
-                    title:'成本维护'
+                    title: '成本维护'
                 },
-                component:() => import('../views/project/CostMaintain.vue')
+                component: () => import('../views/project/CostMaintain.vue')
+            }, {
+                path: '/projectdetails',
+                name: 'projectdetails',
+                meta: {
+                    title: '项目详情'
+                },
+                component:() =>import('../views/project/ProjectDetails.vue')
             }
         ]
     }, {
@@ -155,9 +162,7 @@ router.beforeEach((to, from, next) => {
         next('/login');
     } else if (to.meta.permission) {
         // 如果是管理员权限则可进入，这里只是简单的模拟管理员权限而已
-        role === 'admin'
-            ? next()
-            : next('/403');
+        role === 'admin' ? next() : next('/403');
     } else {
         next();
     }

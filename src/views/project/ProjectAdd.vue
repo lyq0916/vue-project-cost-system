@@ -10,7 +10,6 @@
     </div>
     <div class="container">
       <div class="form-box">
-
         <el-form ref="formRef" :rules="rules" :model="form" label-width="80px">
 
           <el-form-item label="项目名称" prop="name">
@@ -22,7 +21,7 @@
           </el-form-item>
 
           <el-form-item label="项目状态" prop="region">
-            <el-select v-model="form.region" placeholder="请选择">
+            <el-select v-model="form.state" placeholder="请选择">
               <el-option key="1" label="申报中" value="申报中"></el-option>
               <el-option key="2" label="建设中" value="建设中"></el-option>
               <el-option key="3" label="已完工" value="已完工"></el-option>
@@ -158,7 +157,7 @@ export default {
     const form = reactive({
       name: "",
       bnumber: "",
-      region: "",
+      state: "",
       date1: "",
       date2: "",
       addr:"",
@@ -192,6 +191,7 @@ export default {
           $http.post('/projectadd',{
             pname:form.name,
             bnumber:form.bnumber,
+            state:form.state,
             start_date:date1,
             end_date:date2,
             address:address,
@@ -199,7 +199,7 @@ export default {
             budget:num.value,
           }).then((res=>{
             if(res.data.code == 200){
-              ElMessage.error("提交成功");
+              ElMessage.success("提交成功");
             }else{
               ElMessage.error("提交失败");
             }
