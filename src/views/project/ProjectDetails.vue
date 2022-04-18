@@ -27,7 +27,8 @@
           <el-table-column prop="bnumber" label="招标编号"/>
           <el-table-column prop="state" label="状态"/>
           <el-table-column prop="startdate" label="开工日期"/>
-          <el-table-column prop="enddate" label="完工日期"/>
+          <el-table-column prop="enddate1" label="预计完工日期"/>
+          <el-table-column prop="enddate" label="实际完工日期"/>
           <el-table-column prop="address" label="地址"/>
           <el-table-column prop="type" label="类型"/>
           <el-table-column prop="budget" label="预算(万元)"/>
@@ -54,7 +55,7 @@ $http.get('/projectshow').then(response => {
   for (let i = 0; i < response.data.length; i++) {
     tableData.push({
       id: response.data[i].pid, name: response.data[i].pname, bnumber: response.data[i].bnumber,
-      state: response.data[i].state, startdate: response.data[i].start_date, enddate: response.data[i].end_date,
+      state: response.data[i].state, startdate: response.data[i].startdate,enddate1:response.data[i].enddate1, enddate: response.data[i].enddate,
       address: response.data[i].address, type: response.data[i].type, budget: response.data[i].budget
     })
   }
@@ -66,7 +67,7 @@ function search() {
       for (let i = 0; i < response.data.length; i++) {
         tableData.push({
           id: response.data[i].pid, name: response.data[i].pname, bnumber: response.data[i].bnumber,
-          state: response.data[i].state, startdate: response.data[i].start_date, enddate: response.data[i].end_date,
+          state: response.data[i].state, startdate: response.data[i].startdate, enddate1:response.data[i].enddate1,enddate: response.data[i].enddate,
           address: response.data[i].address, type: response.data[i].type, budget: response.data[i].budget
         })
       }

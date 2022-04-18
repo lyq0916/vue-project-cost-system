@@ -1,6 +1,6 @@
 <template>
   <div id="myChart3"
-       :style="{width: '400px', height: '350px',margin:'10px'}"></div>
+       :style="{width: '400px', height: '300px',margin:'10px'}"></div>
 </template>
 
 <script>
@@ -183,6 +183,7 @@ export default {
           },
         }]
       };
+
       let myChart3 = echarts.init(document.getElementById("myChart3"));
       myChart3.setOption(option);
       myChart3.resize();

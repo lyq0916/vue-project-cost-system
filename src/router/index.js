@@ -114,21 +114,21 @@ const routes = [
                 path: '/project',
                 name: 'project',
                 meta: {
-                    title: '可视化面板'
+                    title: '数据看板'
                 },
                 component: () => import ('../views/project/Project.vue')
             }, {
                 path: '/projectadd',
                 name: 'projectadd',
                 meta: {
-                    title: '新建项目'
+                    title: '项目报备'
                 },
                 component: () => import ('../views/project/ProjectAdd.vue')
             }, {
                 path: '/costmaintain',
                 name: 'costmaintain',
                 meta: {
-                    title: '成本维护'
+                    title: '支出记录汇总'
                 },
                 component: () => import('../views/project/CostMaintain.vue')
             }, {

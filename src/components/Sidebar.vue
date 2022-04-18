@@ -46,13 +46,22 @@ export default {
             title: "系统首页",
           },
           {
+            icon: "el-icon-lx-cascades",
+            index: "/project",
+            title: "数据看板"
+          },
+          {
             icon: "el-icon-lx-file",
             index: "9",
-            title: "项目管理",
+            title: "投标项目管理",
             subs: [
               {
                 index: "/projectadd",
-                title: "新建项目",
+                title: "项目报备",
+              },
+              {
+                index: "",
+                title: "投标管理"
               },
               {
                 index: "11",
@@ -73,6 +82,31 @@ export default {
                 title: "可视化面板",
               }
               ,
+            ]
+          },
+          {
+            icon: "el-icon-lx-calendar",
+            index: "13",
+            title: "施工项目管理",
+            subs: [
+              {
+                index: "",
+                title: "汇总查看",
+              },
+              {
+                index: "",
+                title: "成本管理",
+                subs: [
+                  {
+                    index: "/costmaintain",
+                    title: "支出记录汇总",
+                  }
+                ]
+              },
+              {
+                index: "",
+                title: "数据看板",
+              }
             ]
           },
           {

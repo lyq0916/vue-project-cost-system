@@ -1,6 +1,6 @@
 <template>
   <div id="myChart2"
-       :style="{width: '350px', height: '350px',margin:'10px'}"></div>
+       :style="{width: '350px', height: '300px',margin:'10px'}"></div>
 </template>
 
 <script>
@@ -44,7 +44,7 @@ export default {
             percentage: {
               color: '#606266',
               fontSize: 16,
-              padding: [0, 0, 0, 30],
+              padding: [0, 10, 0, 30],
               align: 'right',
             },
           },

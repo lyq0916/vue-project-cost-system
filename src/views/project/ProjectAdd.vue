@@ -174,7 +174,7 @@ export default {
       const two = chinaData[e[1]]
       const three=chinaData[e[2]]
       address =one.label+two.label+three.label;
-      //console.log(address)
+      console.log(address)
     }
 
     // 提交表单，保存到数据库
@@ -192,8 +192,8 @@ export default {
             pname:form.name,
             bnumber:form.bnumber,
             state:form.state,
-            start_date:date1,
-            end_date:date2,
+            startdate:date1,
+            enddate:date2,
             address:address,
             type:form.type,
             budget:num.value,

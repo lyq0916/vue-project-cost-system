@@ -87,9 +87,7 @@
             </el-table-column>
             <el-table-column>
               <template #default="scope">
-                <div class="todo-item" :class="{
-                                        'todo-item-del': scope.row.status,
-                                    }">{{ scope.row.title }}
+                <div class="todo-item" :class="{'todo-item-del': scope.row.status,}">{{ scope.row.title }}
                 </div>
               </template>
             </el-table-column>
@@ -133,14 +131,14 @@ export default {
     //头像上传
     const store = useStore();
     const imgUrl = ref('');
-    const handleImgSrc=async()=>{
+    const handleImgSrc = async () => {
       //let m=await import(store.state.user.photo);
-      imgUrl.value=store.state.user.photo;
+      imgUrl.value = store.state.user.photo;
       console.log(store.state.user.photo)
 
     }
 
-    onMounted(()=>{
+    onMounted(() => {
       handleImgSrc();
     })
 
