@@ -1,6 +1,6 @@
 <template>
   <div id="myChart4"
-       :style="{width: '600px', height: '740px',margin:'10px'}"></div>
+       :style="{width: '600px', height: '615px',margin:'10px'}"></div>
 </template>
 
 <script>

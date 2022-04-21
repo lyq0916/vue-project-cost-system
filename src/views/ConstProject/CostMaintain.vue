@@ -49,10 +49,10 @@
     <!-- 新增成本维护记录 弹出表单对话框-->
     <el-dialog v-model="dialogFormVisible" title="成本支出记录">
       <el-form :model="form">
-        <el-form-item label="记录名称" :label-width="formLabelWidth">
+        <el-form-item label="记录名称" :label-width="formLabelWidth" prop="name">
           <el-input v-model="form.name" autocomplete="off"/>
         </el-form-item>
-        <el-form-item label="支出类型" :label-width="formLabelWidth">
+        <el-form-item label="支出类型" :label-width="formLabelWidth" prop="type">
           <el-select v-model="form.type" placeholder="Please select type">
             <el-option label="材料费用" value="材料"/>
             <el-option label="机械设备" value="机械设备"/>
@@ -61,17 +61,17 @@
             <el-option label="其他" value="其他"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="支出金额" :label-width="formLabelWidth">
+        <el-form-item label="支出金额" :label-width="formLabelWidth" prop="money">
           <el-input-number v-model="num" :precision="2" :step="0.1"/>
           <span style="margin-left: 10px">万元</span>
         </el-form-item>
-        <el-form-item label="项目编号" :label-width="formLabelWidth">
+        <el-form-item label="项目编号" :label-width="formLabelWidth" prop="id">
           <el-input v-model="form.pid"/>
         </el-form-item>
-        <el-form-item label="备注" :label-width="formLabelWidth">
+        <el-form-item label="备注" :label-width="formLabelWidth" prop="note">
           <el-input v-model="form.note" :rows="3" placeholder="Please input"></el-input>
         </el-form-item>
-        <el-form-item label="支出日期" :label-width="formLabelWidth">
+        <el-form-item label="支出日期" :label-width="formLabelWidth" prop="date">
           <el-date-picker
               type="date"
               placeholder="请选择日期"
@@ -84,7 +84,7 @@
       </el-form>
       <template #footer>
       <span class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">Cancel</el-button>
+        <el-button @click="cancel">Cancel</el-button>
         <el-button type="primary" @click="submitDialog">Confirm</el-button>
       </span>
       </template>
@@ -93,11 +93,13 @@
 </template>
 
 <script setup>
-import {ref, reactive, getCurrentInstance, shallowReactive} from 'vue'
+import {ref, reactive, getCurrentInstance, shallowReactive, inject} from 'vue'
 import {ElMessage} from "element-plus";
 
 const currentInstance = getCurrentInstance();
 const {$http} = currentInstance.appContext.config.globalProperties;
+
+const reload=inject('reload')
 
 //新增记录 表单数据
 let dialogFormVisible = ref(false)
@@ -134,8 +136,6 @@ const form1=reactive({
 })
 
 function search() {
-  const date = new Date(Date.parse(form1.date));
-  //console.log(form1.date)
   $http.get('/searchcost?pname='+form1.pname+'&date='+form1.date,{}).then(res => {
     tableData.splice(0, tableData.length);
     for (let i = 0; i < res.data.length; i++) {
@@ -152,6 +152,9 @@ function search() {
   })
 }
 
+function cancel() {
+  dialogFormVisible.value=false;
+}
 function submitDialog() {
   const date = new Date(Date.parse(form.date));
   $http.post('/costadd', {
@@ -163,9 +166,10 @@ function submitDialog() {
     updatedate: date,
   }).then((res => {
     if (res.data.code == 200) {
-      dialogFormVisible = false;
+      dialogFormVisible.value = false;
       ElMessage.success("提交成功");
-      $http.get('/costshow').then(res => {
+      reload();
+      /*$http.get('/costshow').then(res => {
         const i = res.data.length - 1;
         tableData.push({
           id: res.data[i].mid,
@@ -176,12 +180,13 @@ function submitDialog() {
           note: res.data[i].note,
           date: res.data[i].updatedate
         })
-      })
+      })*/
     } else {
       ElMessage.error("提交失败");
     }
   }))
 }
+
 </script>
 
 <style>

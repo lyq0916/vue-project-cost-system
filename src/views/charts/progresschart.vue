@@ -1,15 +1,16 @@
 <template>
   <div id="myChart5"
-       :style="{width: '650px', height: '500px',margin:'10px'}"></div>
+       :style="{width: '1000px', height: '500px',margin:'10px'}"></div>
 </template>
 
 <script>
 import * as echarts from "echarts";
+import {getCurrentInstance} from "vue";
 
 export default {
   name: "progresschart",
   setup() {
-    var categories = ['项目11', '项目2', '项目3', '项目4', '项目5', '项目6'];
+    var categories = [];
     var dayTime = 3600 * 24 * 1000;
 
     var nowDate = new Date();//今日日期
@@ -28,8 +29,8 @@ export default {
       return arr.join("-");
     }
 
-    var data = [
-      {
+    var data = [];
+    /* {
         name: "项目1",
         //项目索引  计划开始日期   计划结束日期， 实际开始日期
         value: [0, '2022-04-12', '2022-04-28', '2022-04-12']
@@ -54,8 +55,7 @@ export default {
         name: "项目6",
         value: [5, '2022-8-01', '2022-9-25', '']
       }
-    ];
-
+    * */
 
     //在渲染时，data中的每个数据项都会调用这个方法
     function renderItem(params, api) {
@@ -190,158 +190,8 @@ export default {
     }
 
     let option;
-    option = {
-      tooltip: {
-        //自定义提示信息
-        formatter: function (params) {//params为当前点击图形元素的数据信息的对象
-          //计划开始时间
-          var planStartDate = params.value[1];
-          //计划结束时间
-          var planEndDate = params.value[2];
-          //实际开始时间
-          var practiceStartDate = "";
-          var practiceStartDate_str = "";
-          if (params.value[3]) {
-            practiceStartDate = params.value[3];
-            practiceStartDate_str = '实际开始日期：' + practiceStartDate + '<br/>';
 
-          }
-
-          //项目周期(毫秒值)：计划结束日期 - 计划开始日期
-          var projectCycle_millisecond = +echarts.number.parseDate(params.value[2]) - +echarts.number.parseDate(params.value[1]);
-          //项目周期(天数)
-          var projectCycle_days = projectCycle_millisecond / dayTime;
-          //当前进度(百分比)
-          var currentProgress_percentage;
-          var currentProgress_percentage_str = "";
-          if (practiceStartDate !== '') {//如果实际开始日期不为空，说明项目已开始
-            //当前进度(毫秒值)：当前日期(毫秒值) - 实际开始日期(毫秒值)
-            var currentProgress_mill = +echarts.number.parseDate(nowDateStr) - +echarts.number.parseDate(params.value[3]);
-            //当前进度(百分比)：当前进度(毫秒值) / 项目周期(毫秒值)
-            currentProgress_percentage = ((currentProgress_mill / projectCycle_millisecond) * 100).toFixed(0);//注意，toFixed的返回值是字符串类型
-            //如果项目已结束：比如计划开始时间1月10日，计划结束时间1月20日，项目周期10天，实际开始时间1月10日，当前日期1月22日，说明项目已结束
-            //那么按照(当前日期-实际开始日期)/项目周期，计算出的百分比，就会大于100，所以需要将百分比置为100
-            if (currentProgress_percentage > 100) {//项目已结束
-              currentProgress_percentage = 100;
-            }
-            currentProgress_percentage_str = '当前进度：' + currentProgress_percentage + '%' + '<br/>';
-          }
-
-          //实际结束时间
-          var practiceEndDate = "";
-          var practiceEndDate_str = "";
-          if (currentProgress_percentage == 100) {//如果项目进度已完成或项目已结束
-            //实际结束时间(毫秒值)：实际开始日期(毫秒值) + 项目周期(毫秒值)
-            var practiceEndDate_millisecond = +echarts.number.parseDate(practiceStartDate) + projectCycle_millisecond;
-            //实际结束时间(日期格式)
-            practiceEndDate = echarts.format.formatTime('yyyy-MM-dd', practiceEndDate_millisecond);
-            practiceEndDate_str = '实际结束日期：' + practiceEndDate + '<br/>';
-          }
-          return params.name + '<br/>'
-              + '计划开始时间：' + planStartDate + '<br/>'
-              + '计划结束时间：' + planEndDate + '<br/>'
-              + '项目周期：' + projectCycle_days + '天<br/>'
-              + currentProgress_percentage_str
-              + practiceStartDate_str
-              + practiceEndDate_str
-        }
-      },
-      title: {
-        text: '项目进度',
-        left: 'center'
-      },
-      dataZoom: [
-        {
-          //区域缩放组件的类型为滑块，默认作用在x轴上
-          type: 'slider',
-          //区域缩放组件的过滤模式，weakFilter：在进行区域缩放时，允许图形的一部分在坐标系上(可见)，另一部分在坐标系外(隐藏)
-          filterMode: 'weakFilter',
-          showDataShadow: false,
-          top: 400,
-          height: 10,
-          //区域缩放组件边框颜色
-          borderColor: 'transparent',
-          //区域缩放组件边框背景
-          backgroundColor: '#e2e2e2',
-          //区域缩放组件上的手柄的样式
-          handleIcon: 'M10.7,11.9H9.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4h1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7v-1.2h6.6z M13.3,22H6.7v-1.2h6.6z M13.3,19.6H6.7v-1.2h6.6z', // jshint ignore:line
-          //手柄大小
-          handleSize: 20,
-          //为手柄设置阴影效果
-          handleStyle: {
-            shadowBlur: 6,
-            shadowOffsetX: 1,
-            shadowOffsetY: 2,
-            shadowColor: '#aaa'
-          },
-          labelFormatter: ''
-        },
-        {
-          //区域缩放组件的类型为内置在坐标系中，默认作用在x轴的坐标系中
-          type: 'inside',
-          //区域缩放组件的过滤模式，weakFilter：在进行区域缩放时，允许图形的一部分在坐标系上(可见)，另一部分在坐标系外(隐藏)
-          filterMode: 'weakFilter'
-        }
-      ],
-      //图表底板
-      grid: {
-        x:80,
-
-        height: 300
-      },
-      xAxis: {
-        type: "time",//x轴类型为时间轴
-        min: 1646064000000,//最小值为2022-04-10
-        max: 1672416000000,//最大值为2022-12-31
-        axisLabel: {
-          interval: 0,//强制显示所有标签
-        }
-
-      },
-      yAxis: {
-        data: categories,
-        axisTick: {
-          alignWithLabel: true//保证刻度线和标签对齐，当boundaryGap为true的时候有效，不过boundaryGap默认就是true
-        }
-      },
-      legend: {
-        left: '70%',
-        top: 10,
-        data: ['计划工期', '实际工期']
-      },
-      series: [
-        {
-          type: 'custom',
-          //使用自定义的图形元素
-          renderItem: renderItem,
-          name: '计划工期',
-          itemStyle: {
-            //透明度
-            opacity: 0.8,
-            color: '#AACCF9'
-          },
-          encode: {
-            //将维度1和维度2的数据映射到x轴
-            x: [1, 2],
-            //将维度0的数据映射到y轴
-            y: 0
-          },
-          data: data
-        },
-        //这个系列并没有太大作用，也没有给它设置data，只是为了通过这个系列，显示图例(legend)而已
-        {
-          type: 'custom',
-          name: '实际工期',
-          itemStyle: {
-            //透明度
-            opacity: 0.8,
-            color: '#2076ED'
-          }
-        }
-      ]
-    }
-
-    let newPromise = new Promise((resolve) => {
+   /* let newPromise = new Promise((resolve) => {
       resolve()
     })
     //然后异步执行echarts的初始化函数
@@ -349,8 +199,170 @@ export default {
       let myChart5 = echarts.init(document.getElementById("myChart5"));
       myChart5.setOption(option);
       myChart5.resize();
-    })
+    })*/
+    const currentInstance = getCurrentInstance();
+    const {$http} = currentInstance.appContext.config.globalProperties;
 
+    $http.get("/getconstbeans").then((res) => {
+      //console.log(res);
+      for(let i=0;i<res.data.length;i++){
+        categories.push(res.data[i].pname);
+        data.push({name: res.data[i].pname,value: [i,res.data[i].estart,res.data[i].eend,res.data[i].start]})
+      }
+      option = {
+        tooltip: {
+          //自定义提示信息
+          formatter: function (params) {//params为当前点击图形元素的数据信息的对象
+            //计划开始时间
+            var planStartDate = params.value[1];
+            //计划结束时间
+            var planEndDate = params.value[2];
+            //实际开始时间
+            var practiceStartDate = "";
+            var practiceStartDate_str = "";
+            if (params.value[3]) {
+              practiceStartDate = params.value[3];
+              practiceStartDate_str = '实际开始日期：' + practiceStartDate + '<br/>';
+            }
+
+            //项目周期(毫秒值)：计划结束日期 - 计划开始日期
+            var projectCycle_millisecond = +echarts.number.parseDate(params.value[2]) - +echarts.number.parseDate(params.value[1]);
+            //项目周期(天数)
+            var projectCycle_days = projectCycle_millisecond / dayTime;
+            //当前进度(百分比)
+            var currentProgress_percentage;
+            var currentProgress_percentage_str = "";
+            if (practiceStartDate !== '') {//如果实际开始日期不为空，说明项目已开始
+              //当前进度(毫秒值)：当前日期(毫秒值) - 实际开始日期(毫秒值)
+              var currentProgress_mill = +echarts.number.parseDate(nowDateStr) - +echarts.number.parseDate(params.value[3]);
+              //当前进度(百分比)：当前进度(毫秒值) / 项目周期(毫秒值)
+              currentProgress_percentage = ((currentProgress_mill / projectCycle_millisecond) * 100).toFixed(0);//注意，toFixed的返回值是字符串类型
+              //如果项目已结束：比如计划开始时间1月10日，计划结束时间1月20日，项目周期10天，实际开始时间1月10日，当前日期1月22日，说明项目已结束
+              //那么按照(当前日期-实际开始日期)/项目周期，计算出的百分比，就会大于100，所以需要将百分比置为100
+              if (currentProgress_percentage > 100) {//项目已结束
+                currentProgress_percentage = 100;
+              }
+              currentProgress_percentage_str = '当前进度：' + currentProgress_percentage + '%' + '<br/>';
+            }
+
+            //实际结束时间
+            var practiceEndDate = "";
+            var practiceEndDate_str = "";
+            if (currentProgress_percentage == 100) {//如果项目进度已完成或项目已结束
+              //实际结束时间(毫秒值)：实际开始日期(毫秒值) + 项目周期(毫秒值)
+              var practiceEndDate_millisecond = +echarts.number.parseDate(practiceStartDate) + projectCycle_millisecond;
+              //实际结束时间(日期格式)
+              practiceEndDate = echarts.format.formatTime('yyyy-MM-dd', practiceEndDate_millisecond);
+              practiceEndDate_str = '实际结束日期：' + practiceEndDate + '<br/>';
+            }
+            return params.name + '<br/>'
+                + '计划开始时间：' + planStartDate + '<br/>'
+                + '计划结束时间：' + planEndDate + '<br/>'
+                + '项目周期：' + projectCycle_days + '天<br/>'
+                + currentProgress_percentage_str
+                + practiceStartDate_str
+                + practiceEndDate_str
+          }
+        },
+        title: {
+          text: '项目进度',
+          left: 'center'
+        },
+        dataZoom: [
+          {
+            //区域缩放组件的类型为滑块，默认作用在x轴上
+            type: 'slider',
+            //区域缩放组件的过滤模式，weakFilter：在进行区域缩放时，允许图形的一部分在坐标系上(可见)，另一部分在坐标系外(隐藏)
+            filterMode: 'weakFilter',
+            showDataShadow: false,
+            top: 400,
+            height: 10,
+            //区域缩放组件边框颜色
+            borderColor: 'transparent',
+            //区域缩放组件边框背景
+            backgroundColor: '#e2e2e2',
+            //区域缩放组件上的手柄的样式
+            handleIcon: 'M10.7,11.9H9.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4h1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7v-1.2h6.6z M13.3,22H6.7v-1.2h6.6z M13.3,19.6H6.7v-1.2h6.6z', // jshint ignore:line
+            //手柄大小
+            handleSize: 30,
+            //为手柄设置阴影效果
+            handleStyle: {
+              shadowBlur: 6,
+              shadowOffsetX: 1,
+              shadowOffsetY: 2,
+              shadowColor: '#aaa'
+            },
+            labelFormatter: ''
+          },
+          {
+            //区域缩放组件的类型为内置在坐标系中，默认作用在x轴的坐标系中
+            type: 'inside',
+            //区域缩放组件的过滤模式，weakFilter：在进行区域缩放时，允许图形的一部分在坐标系上(可见)，另一部分在坐标系外(隐藏)
+            filterMode: 'weakFilter'
+          }
+        ],
+        //图表底板
+        grid: {
+          x:80,
+          height: 300,
+          width:800
+        },
+        xAxis: {
+          type: "time",//x轴类型为时间轴
+          min: 1646064000000,//最小值为2022-04-10
+          max: 1672416000000,//最大值为2022-12-31
+          axisLabel: {
+            interval: 0,//强制显示所有标签
+          }
+
+        },
+        yAxis: {
+          data: categories,
+          axisTick: {
+            alignWithLabel: true//保证刻度线和标签对齐，当boundaryGap为true的时候有效，不过boundaryGap默认就是true
+          }
+        },
+        legend: {
+          left: '70%',
+          top: 10,
+          data: ['计划工期', '实际工期']
+        },
+        series: [
+          {
+            type: 'custom',
+            //使用自定义的图形元素
+            render: renderItem,
+            renderItem: renderItem,
+            name: '计划工期',
+            itemStyle: {
+              //透明度
+              opacity: 0.8,
+              color: '#AACCF9'
+            },
+            encode: {
+              //将维度1和维度2的数据映射到x轴
+              x: [1, 2],
+              //将维度0的数据映射到y轴
+              y: 0
+            },
+            data: data
+          },
+          //这个系列并没有太大作用，也没有给它设置data，只是为了通过这个系列，显示图例(legend)而已
+          {
+            type: 'custom',
+            name: '实际工期',
+            itemStyle: {
+              //透明度
+              opacity: 0.8,
+              color: '#2076ED'
+            }
+          }
+        ]
+      };
+      let myChart5 = echarts.init(document.getElementById("myChart5"));
+      myChart5.setOption(option);
+      myChart5.resize();
+    })
   }
 }
 </script>

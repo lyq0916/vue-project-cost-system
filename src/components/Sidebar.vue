@@ -52,45 +52,36 @@ export default {
           },
           {
             icon: "el-icon-lx-file",
-            index: "9",
+            index: "1",
             title: "投标项目管理",
             subs: [
               {
-                index: "/projectadd",
+                index: "3",
                 title: "项目报备",
-              },
-              {
-                index: "",
-                title: "投标管理"
-              },
-              {
-                index: "11",
-                title: "详情查看",
-                subs: [
+                subs:[
+                  {
+                    index: "/projectadd",
+                    title: "添加项目",
+                  },
                   {
                     index: "/projectdetails",
                     title: "项目详情"
-                  },
-                  {
-                    index: "/costmaintain",
-                    title: "成本维护",
-                  },
+                  }
                 ]
               },
               {
-                index: "/project",
-                title: "可视化面板",
-              }
-              ,
+                index: "/bidproject",
+                title: "投标管理"
+              },
             ]
           },
           {
             icon: "el-icon-lx-calendar",
-            index: "13",
+            index: "7",
             title: "施工项目管理",
             subs: [
               {
-                index: "",
+                index: "/constproject",
                 title: "汇总查看",
               },
               {
@@ -104,70 +95,24 @@ export default {
                 ]
               },
               {
-                index: "",
+                index: "/datashow",
                 title: "数据看板",
               }
             ]
           },
           {
-            icon: "el-icon-lx-cascades",
-            index: "/table",
-            title: "基础表格",
-          }
-          ,
-          {
             icon: "el-icon-lx-copy",
             index: "/tabs",
             title: "tab选项卡",
-          }
-          ,
-          {
-            icon: "el-icon-lx-calendar",
-            index: "3",
-            title: "表单相关",
-            subs: [
-              {
-                index: "/form",
-                title: "基本表单",
-              },
-              {
-                index: "/upload",
-                title: "文件上传",
-              },
-              {
-                index: "4",
-                title: "三级菜单",
-                subs: [
-                  {
-                    index: "/editor",
-                    title: "富文本编辑器",
-                  },
-                ],
-              },
-            ],
-          }
-          ,
+          },
           {
             icon: "el-icon-lx-emoji",
             index: "/icon",
             title: "自定义图标",
-          }
-          ,
-          {
-            icon: "el-icon-pie-chart",
-            index: "/charts",
-            title: "schart图表",
-          }
-          ,
-          {
-            icon: "el-icon-lx-global",
-            index: "/i18n",
-            title: "国际化功能",
-          }
-          ,
+          },
           {
             icon: "el-icon-lx-warn",
-            index: "7",
+            index: "11",
             title: "错误处理",
             subs: [
               {
@@ -179,14 +124,12 @@ export default {
                 title: "404页面",
               },
             ],
-          }
-          ,
+          },
           {
             icon: "el-icon-lx-redpacket_fill",
             index: "/donate",
             title: "支持作者",
-          }
-          ,
+          },
         ]
     ;
 

@@ -1,14 +1,27 @@
 <template>
-    <router-view />
+    <router-view v-if="state.showRouter"/>
 </template>
 
 <script>
 import * as echarts from 'echarts'
-import { provide } from 'vue'
+import {nextTick, provide, reactive} from 'vue'
 export default {
   name:'App',
   setup() {
-      provide('ec',echarts)
+      provide('ec',echarts);
+      const state=reactive({
+        showRouter: true,
+      })
+    function reload(){
+        state.showRouter=false;
+        nextTick(() =>{
+          state.showRouter=true
+        })
+    }
+    provide('reload',reload);
+      return{
+        state
+      }
     },
 };
 </script>

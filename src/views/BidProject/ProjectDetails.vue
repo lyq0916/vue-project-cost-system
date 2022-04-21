@@ -26,20 +26,17 @@
           <el-table-column prop="name" label="项目名称"/>
           <el-table-column prop="bnumber" label="招标编号"/>
           <el-table-column prop="state" label="状态"/>
-          <el-table-column prop="startdate" label="开工日期"/>
-          <el-table-column prop="enddate1" label="预计完工日期"/>
-          <el-table-column prop="enddate" label="实际完工日期"/>
           <el-table-column prop="address" label="地址"/>
           <el-table-column prop="type" label="类型"/>
           <el-table-column prop="budget" label="预算(万元)"/>
-          <el-table-column prop="cost" label="成本"/>
+          <el-table-column prop="date" label="报备日期"/>
         </el-table>
       </div>
     </div>
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import {getCurrentInstance, reactive, shallowReactive} from 'vue'
 
 const currentInstance = getCurrentInstance();
@@ -54,25 +51,72 @@ $http.get('/projectshow').then(response => {
   console.log(response.data)
   for (let i = 0; i < response.data.length; i++) {
     tableData.push({
-      id: response.data[i].pid, name: response.data[i].pname, bnumber: response.data[i].bnumber,
-      state: response.data[i].state, startdate: response.data[i].startdate,enddate1:response.data[i].enddate1, enddate: response.data[i].enddate,
-      address: response.data[i].address, type: response.data[i].type, budget: response.data[i].budget
+      id: response.data[i].pid,
+      name: response.data[i].pname,
+      bnumber: response.data[i].bnumber,
+      state: response.data[i].state,
+      address: response.data[i].address,
+      type: response.data[i].type,
+      budget: response.data[i].budget,
+      date: response.data[i].date,
     })
   }
 })
 
 function search() {
-    $http.get('/searchproject?pname='+form.pname, {}).then(response => {
-      tableData.splice(0, tableData.length);
-      for (let i = 0; i < response.data.length; i++) {
-        tableData.push({
-          id: response.data[i].pid, name: response.data[i].pname, bnumber: response.data[i].bnumber,
-          state: response.data[i].state, startdate: response.data[i].startdate, enddate1:response.data[i].enddate1,enddate: response.data[i].enddate,
-          address: response.data[i].address, type: response.data[i].type, budget: response.data[i].budget
-        })
-      }
-    })
+  $http.get('/searchproject?pname=' + form.pname, {}).then(response => {
+    tableData.splice(0, tableData.length);
+    for (let i = 0; i < response.data.length; i++) {
+      tableData.push({
+        id: response.data[i].pid,
+        name: response.data[i].pname,
+        bnumber: response.data[i].bnumber,
+        state: response.data[i].state,
+        address: response.data[i].address,
+        type: response.data[i].type,
+        budget: response.data[i].budget,
+        date: response.data[i].date,
+      })
+    }
+  })
 }
+
+
+interface User {
+  date: string
+  name: string
+  address: string
+}
+
+const handleEdit = (index: number, row: User) => {
+  console.log(index, row)
+}
+const handleDelete = (index: number, row: User) => {
+  console.log(index, row)
+}
+
+const tableData1: User[] = [
+  {
+    date: '2016-05-03',
+    name: 'Tom',
+    address: 'No. 189, Grove St, Los Angeles',
+  },
+  {
+    date: '2016-05-02',
+    name: 'Tom',
+    address: 'No. 189, Grove St, Los Angeles',
+  },
+  {
+    date: '2016-05-04',
+    name: 'Tom',
+    address: 'No. 189, Grove St, Los Angeles',
+  },
+  {
+    date: '2016-05-01',
+    name: 'Tom',
+    address: 'No. 189, Grove St, Los Angeles',
+  },
+]
 </script>
 
 <style>

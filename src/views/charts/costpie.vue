@@ -84,7 +84,7 @@ export default {
 
     $http.get('/costtype', {}).then(res => {
       for (let i = 0; i < res.data.length; i++) {
-        echartData.push({value: res.data[i].money, name: res.data[i].type});
+        echartData.push({value: res.data[i][1], name: res.data[i][0]});
       }
       total = echartData.reduce((a, b) => {
         return accAdd(a, b.value)

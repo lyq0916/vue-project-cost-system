@@ -11,7 +11,6 @@
     <div class="container">
       <div class="form-box">
         <el-form ref="formRef" :rules="rules" :model="form" label-width="80px">
-
           <el-form-item label="项目名称" prop="name">
             <el-input v-model="form.name"></el-input>
           </el-form-item>
@@ -20,42 +19,24 @@
             <el-input v-model="form.bnumber"></el-input>
           </el-form-item>
 
-          <el-form-item label="项目状态" prop="region">
+<!--          <el-form-item label="项目状态" prop="region">
             <el-select v-model="form.state" placeholder="请选择">
               <el-option key="1" label="申报中" value="申报中"></el-option>
               <el-option key="2" label="建设中" value="建设中"></el-option>
               <el-option key="3" label="已完工" value="已完工"></el-option>
             </el-select>
-          </el-form-item>
+          </el-form-item>-->
 
-          <el-form-item label="预计日期" prop="date">
-            <el-row :gutter="20">
-              <el-col :span="11">
-                <el-form-item prop="date1">
-                  <el-date-picker
-                      type="date"
-                      placeholder="开工日期"
-                      v-model="form.date1"
-                      value-format="YYYY-MM-DD"
-                      format="YYYY-MM-DD"
-                      style="width: 100%;">
-                  </el-date-picker>
-                </el-form-item>
-              </el-col>
-              <el-col class="line" :span="2"></el-col>
-              <el-col :span="11">
-                <el-form-item prop="date2">
-                  <el-date-picker
-                      type="date"
-                      placeholder="结束日期"
-                      v-model="form.date2"
-                      value-format="YYYY-MM-DD"
-                      format="YYYY-MM-DD"
-                      style="width: 100%;">
-                  </el-date-picker>
-                </el-form-item>
-              </el-col>
-            </el-row>
+          <el-form-item label="报备日期" prop="date">
+            <el-date-picker
+                type="date"
+                placeholder="请选择日期"
+                v-model="form.date"
+                value-format="YYYY-MM-DD"
+                format="YYYY-MM-DD"
+                style="width: 100%;">
+            </el-date-picker>
+            <el-col class="line" :span="2"></el-col>
           </el-form-item>
 
           <el-form-item label="省/市/区" prop="addr">
@@ -63,7 +44,7 @@
           </el-form-item>
 
           <el-form-item label="项目类型" prop="type">
-            <el-select  v-model="form.type" class="m-2" placeholder="Select">
+            <el-select v-model="form.type" class="m-2" placeholder="Select">
               <el-option
                   v-for="item in options"
                   :key="item.value"
@@ -94,10 +75,11 @@
 </template>
 
 <script lang="ts">
-import {ref, reactive,getCurrentInstance} from "vue";
+import {ref, reactive, getCurrentInstance} from "vue";
 import {ElMessage} from "element-plus";
 // 参数取值
 import {EluiChinaAreaDht} from 'elui-china-area-dht'
+
 const chinaData = new EluiChinaAreaDht.ChinaArea().chinaAreaflat
 
 export default {
@@ -149,32 +131,30 @@ export default {
       name: [
         {required: true, message: "请输入表单名称", trigger: "blur"},
       ],
-      addr:[
-        {required: true, message: "请输入项目地址",trigger: "blur"},
+      addr: [
+        {required: true, message: "请输入项目地址", trigger: "blur"},
       ],
     };
     const formRef = ref(null);
     const form = reactive({
       name: "",
       bnumber: "",
-      state: "",
-      date1: "",
-      date2: "",
-      addr:"",
-      type:"",
+      date:"",
+      addr: "",
+      type: "",
       budget: "1",
       desc: "",
       options: [],
     });
 
     //省市区
-    let address="";
+    let address = "";
+
     function onChange(e) {
       const one = chinaData[e[0]]
       const two = chinaData[e[1]]
-      const three=chinaData[e[2]]
-      address =one.label+two.label+three.label;
-      console.log(address)
+      const three = chinaData[e[2]]
+      address = one.label + two.label + three.label;
     }
 
     // 提交表单，保存到数据库
@@ -186,21 +166,18 @@ export default {
       formRef.value.validate((valid) => {
         if (valid) {
           //console.log(form);
-          var date1=new Date(Date.parse(form.date1));
-          var date2=new Date(Date.parse(form.date2));
-          $http.post('/projectadd',{
-            pname:form.name,
-            bnumber:form.bnumber,
-            state:form.state,
-            startdate:date1,
-            enddate:date2,
-            address:address,
-            type:form.type,
-            budget:num.value,
-          }).then((res=>{
-            if(res.data.code == 200){
+          var date1 = new Date(Date.parse(form.date));
+          $http.post('/projectadd', {
+            pname: form.name,
+            bnumber: form.bnumber,
+            address: address,
+            type: form.type,
+            budget: num.value,
+            date:date1,
+          }).then((res => {
+            if (res.data.code == 200) {
               ElMessage.success("提交成功");
-            }else{
+            } else {
               ElMessage.error("提交失败");
             }
           }))

@@ -114,30 +114,52 @@ const routes = [
                 path: '/project',
                 name: 'project',
                 meta: {
-                    title: '数据看板'
+                    title: '数据看板(总体项目)'
                 },
-                component: () => import ('../views/project/Project.vue')
+                component: () => import ('../views/Project.vue')
             }, {
                 path: '/projectadd',
                 name: 'projectadd',
                 meta: {
                     title: '项目报备'
                 },
-                component: () => import ('../views/project/ProjectAdd.vue')
+                component: () => import ('../views/BidProject/ProjectAdd.vue')
             }, {
                 path: '/costmaintain',
                 name: 'costmaintain',
                 meta: {
                     title: '支出记录汇总'
                 },
-                component: () => import('../views/project/CostMaintain.vue')
+                component: () => import('../views/ConstProject/CostMaintain.vue')
             }, {
                 path: '/projectdetails',
                 name: 'projectdetails',
                 meta: {
                     title: '项目详情'
                 },
-                component:() =>import('../views/project/ProjectDetails.vue')
+                component: () => import('../views/BidProject/ProjectDetails.vue')
+            }, {
+                path: '/bidproject',
+                name: 'bidproject',
+                meta: {
+                    title: '投标项目'
+                },
+                component: () => import('../views/BidProject/BidProject.vue')
+            }, {
+                path: '/constproject',
+                name: 'constproject',
+                meta: {
+                    title: '建设中项目'
+                },
+                component:() =>import('../views/ConstProject/ConstProject.vue')
+            },
+            {
+                path: '/datashow',
+                name: 'datashow',
+                meta: {
+                    title: '数据看板(单个项目)'
+                },
+                component:() =>import('../views/ConstProject/DataShow.vue')
             }
         ]
     }, {

@@ -11,12 +11,12 @@
             </div>
           </div>
           <div class="user-info-list">
-            上次登录时间：
-            <span>2019-11-01</span>
+            今天是：
+            <span>{{date}}</span>
           </div>
           <div class="user-info-list">
             上次登录地点：
-            <span>东莞</span>
+            <span>马鞍山</span>
           </div>
         </el-card>
         <el-card shadow="hover" style="height:252px;">
@@ -29,10 +29,8 @@
           <el-progress :percentage="71.3" color="#42b983"></el-progress>
           JavaScript
           <el-progress :percentage="24.1" color="#f1e05a"></el-progress>
-          CSS
-          <el-progress :percentage="13.7"></el-progress>
-          HTML
-          <el-progress :percentage="5.9" color="#f56c6c"></el-progress>
+          Java
+          <el-progress :percentage="78.9"></el-progress>
         </el-card>
       </el-col>
       <el-col :span="16">
@@ -101,18 +99,6 @@
         </el-card>
       </el-col>
     </el-row>
-    <el-row :gutter="20">
-      <el-col :span="12">
-        <el-card shadow="hover">
-          <schart ref="bar" class="schart" canvasId="bar" :options="options"></schart>
-        </el-card>
-      </el-col>
-      <el-col :span="12">
-        <el-card shadow="hover">
-          <schart ref="line" class="schart" canvasId="line" :options="options2"></schart>
-        </el-card>
-      </el-col>
-    </el-row>
   </div>
 </template>
 
@@ -120,6 +106,7 @@
 import Schart from "vue-schart";
 import {onMounted, reactive, ref} from "vue";
 import {useStore} from "vuex";
+import moment from "moment";
 
 export default {
   name: "dashboard",
@@ -127,6 +114,7 @@ export default {
   setup() {
     const name = localStorage.getItem("ms_username");
     const role = name === "admin" ? "超级管理员" : "普通用户";
+    const date =moment().format("YYYY-MM-DD");
 
     //头像上传
     const store = useStore();
@@ -142,79 +130,7 @@ export default {
       handleImgSrc();
     })
 
-    const data = reactive([
-      {
-        name: "2018/09/04",
-        value: 1083,
-      },
-      {
-        name: "2018/09/05",
-        value: 941,
-      },
-      {
-        name: "2018/09/06",
-        value: 1139,
-      },
-      {
-        name: "2018/09/07",
-        value: 816,
-      },
-      {
-        name: "2018/09/08",
-        value: 327,
-      },
-      {
-        name: "2018/09/09",
-        value: 228,
-      },
-      {
-        name: "2018/09/10",
-        value: 1065,
-      },
-    ]);
-    const options = {
-      type: "bar",
-      title: {
-        text: "最近一周各品类销售图",
-      },
-      xRorate: 25,
-      labels: ["周一", "周二", "周三", "周四", "周五"],
-      datasets: [
-        {
-          label: "家电",
-          data: [234, 278, 270, 190, 230],
-        },
-        {
-          label: "百货",
-          data: [164, 178, 190, 135, 160],
-        },
-        {
-          label: "食品",
-          data: [144, 198, 150, 235, 120],
-        },
-      ],
-    };
-    const options2 = {
-      type: "line",
-      title: {
-        text: "最近几个月各品类销售趋势图",
-      },
-      labels: ["6月", "7月", "8月", "9月", "10月"],
-      datasets: [
-        {
-          label: "家电",
-          data: [234, 278, 270, 190, 230],
-        },
-        {
-          label: "百货",
-          data: [164, 178, 150, 135, 160],
-        },
-        {
-          label: "食品",
-          data: [74, 118, 200, 235, 90],
-        },
-      ],
-    };
+
     const todoList = reactive([
       {
         title: "今天要修复100个bug",
@@ -244,9 +160,7 @@ export default {
 
     return {
       name,
-      data,
-      options,
-      options2,
+      date,
       todoList,
       role,
       imgUrl,
