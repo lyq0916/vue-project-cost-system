@@ -54,5 +54,5 @@ export default {
                 additionalData: '@import "./src/assets/scss/global.scss";' // 添加公共样式
             }
         }
-    }
+    },
 }

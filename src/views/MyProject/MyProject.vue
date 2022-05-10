@@ -4,7 +4,7 @@
 
 <script>
 export default {
-  name:"line"
+  name: "MyProject"
 }
 </script>
 

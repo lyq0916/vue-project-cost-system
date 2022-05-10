@@ -424,13 +424,13 @@ export default {
       }
       option = {
         backgroundColor: '#fff',
-        title: {
-          text: '项目分布地图',
+        /*title: {
+          text: '项目地点分布',
           left: 'center',
           textStyle: {
-            color: '#fff'
+            color: '#222'
           }
-        },
+        },*/
         tooltip: {
           trigger: 'item',
           formatter: function (params) {
@@ -522,7 +522,6 @@ export default {
           }
         ]
       };
-      console.log(convertData(data))
       let myChart4 = echarts.init(document.getElementById("myChart4"));
       myChart4.setOption(option);
       myChart4.resize();

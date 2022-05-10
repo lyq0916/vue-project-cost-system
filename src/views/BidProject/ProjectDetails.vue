@@ -22,14 +22,19 @@
           </el-form>
         </div>
         <el-table :data="tableData" border stripe style="width: 100%">
-          <el-table-column prop="id" label="项目编号"/>
-          <el-table-column prop="name" label="项目名称"/>
-          <el-table-column prop="bnumber" label="招标编号"/>
-          <el-table-column prop="state" label="状态"/>
-          <el-table-column prop="address" label="地址"/>
-          <el-table-column prop="type" label="类型"/>
-          <el-table-column prop="budget" label="预算(万元)"/>
-          <el-table-column prop="date" label="报备日期"/>
+          <el-table-column prop="id" label="项目编号" width="100"/>
+          <el-table-column prop="name" label="项目名称" width="200"/>
+          <el-table-column prop="bnumber" label="招标编号" width="150"/>
+          <el-table-column prop="state" label="状态" width="100"/>
+          <el-table-column prop="address" label="地址" width="200"/>
+          <el-table-column prop="type" label="类型" width="100"/>
+          <el-table-column prop="budget" label="总预算(万元)" width="120"/>
+          <el-table-column prop="mbudget" label="材料预算" width="100"/>
+          <el-table-column prop="ebudget" label="机械设备预算" width="120"/>
+          <el-table-column prop="lbudget" label="人工预算" width="100"/>
+          <el-table-column prop="obudget" label="其他预算" width="100"/>
+          <el-table-column prop="ibudget" label="间接支出预算" width="120"/>
+          <el-table-column prop="date" label="报备日期" width="100"/>
         </el-table>
       </div>
     </div>
@@ -47,8 +52,9 @@ const form = reactive({
 })
 
 const tableData = shallowReactive([])
+
 $http.get('/projectshow').then(response => {
-  console.log(response.data)
+  //console.log(response.data)
   for (let i = 0; i < response.data.length; i++) {
     tableData.push({
       id: response.data[i].pid,
@@ -58,6 +64,11 @@ $http.get('/projectshow').then(response => {
       address: response.data[i].address,
       type: response.data[i].type,
       budget: response.data[i].budget,
+      mbudget:response.data[i].mbudget,
+      ebudget:response.data[i].ebudget,
+      lbudget:response.data[i].lbudget,
+      obudget:response.data[i].obudget,
+      ibudget:response.data[i].ibudget,
       date: response.data[i].date,
     })
   }
@@ -75,55 +86,18 @@ function search() {
         address: response.data[i].address,
         type: response.data[i].type,
         budget: response.data[i].budget,
+        mbudget:response.data[i].mbudget,
+        ebudget:response.data[i].ebudget,
+        lbudget:response.data[i].lbudget,
+        obudget:response.data[i].obudget,
+        ibudget:response.data[i].ibudget,
         date: response.data[i].date,
       })
     }
   })
 }
-
-
-interface User {
-  date: string
-  name: string
-  address: string
-}
-
-const handleEdit = (index: number, row: User) => {
-  console.log(index, row)
-}
-const handleDelete = (index: number, row: User) => {
-  console.log(index, row)
-}
-
-const tableData1: User[] = [
-  {
-    date: '2016-05-03',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-02',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-04',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-01',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-]
 </script>
 
 <style>
-.table-header .header-right {
-  position: absolute;
-  right: 5px;
-
-}
 
 </style>

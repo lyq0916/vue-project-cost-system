@@ -176,3 +176,7 @@ a {
 .v-note-wrapper .v-note-panel {
     min-height: 500px;
 }
+
+.el-card{
+    margin-bottom: 10px;
+}

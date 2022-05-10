@@ -1,17 +1,31 @@
 import {createStore} from 'vuex'
+import axios from "axios";
 
 export default createStore({
     state: {
         tagsList: [],
         collapse: false,
         username: window.sessionStorage.getItem('user' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('user' || '[]')).username,
-        user: window.sessionStorage.getItem('user' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('user' || '[]'))
+        user: window.sessionStorage.getItem('user' || '[]') == null ? '' : JSON.parse(window.sessionStorage.getItem('user' || '[]')),
+        menus: [],
+        header:false,
+        project:[]
     },
     mutations: {
-        login (state, user) {
+        //登录时将user信息存入
+        login(state, user) {
             state.user = user
-            //console.log(user)
             window.sessionStorage.setItem('user', JSON.stringify(user))
+        },
+        //判断是不是项目负责人
+        isHeader(state, headerbean) {
+            state.header = headerbean;
+            //如果是项目负责人
+            if(headerbean.header){
+                axios.get('/getprojectbyuid?uid='+headerbean.uid).then(res =>{
+                    state.project=res.data;
+                })
+            }
         },
         delTagsItem(state, data) {
             state
@@ -56,6 +70,9 @@ export default createStore({
         // 侧边栏折叠
         handleCollapse(state, data) {
             state.collapse = data;
+        },
+        initMenu(state, menus) {
+            state.menus = menus
         }
     },
     actions: {},

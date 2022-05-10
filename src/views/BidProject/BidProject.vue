@@ -132,6 +132,7 @@ const handleShow = (index: number, row: Project) => {
   //console.log(row.pid);
   visible1.value = true;
   $http.get('/getprojectbyid?pid=' + row.pid, {}).then(response => {
+    tableData1.splice(0,tableData1.length)
     tableData1.push({
       id: response.data.pid,
       name: response.data.pname,
@@ -178,6 +179,10 @@ function cancel() {
 }
 
 function submitDialog() {
+  //修改项目为建设中 --
+  // 1.向const_project中插入记录(准备中 有预计开工完工日期)
+  // 2.修改bid_project中状态为建设中
+  // 3.project中修改项目状态为建设中(在后端已经实现)
   $http.get('/addconst?pid=' + pid + '&start=' + form.date1 + '&end=' + form.date2).then(response => {
     if (response.data.code == 200) {
       $http.get('/updatebp?pid=' + pid + '&state=建设中').then(response => {

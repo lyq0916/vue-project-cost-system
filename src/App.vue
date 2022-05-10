@@ -1,5 +1,8 @@
 <template>
-    <router-view v-if="state.showRouter"/>
+    <keep-alive>
+      <router-view v-if="state.showRouter&& $route.meta.keepAlive"/>
+    </keep-alive>
+  <router-view v-if="state.showRouter&&!$route.meta.keepAlive"></router-view>
 </template>
 
 <script>

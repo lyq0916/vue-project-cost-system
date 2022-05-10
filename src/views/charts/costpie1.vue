@@ -1,41 +1,47 @@
 <template>
-  <el-form :model="form">
-    <el-form-item>
-      <el-col>
-        <el-row>
-          <el-input v-model="form.pname" placeholder="输入项目名称" suffix-icon="icon-mya-Group46"
-                    style="width: 300px;height:30px;margin: 10px"></el-input>
-          <el-button type="primary" @click="search" style="height: 30px ;margin: 10px">搜索</el-button>
-        </el-row>
-        <el-row>
-          <el-input v-model="form.pid" placeholder="输入项目编号" suffix-icon="icon-mya-Group46"
-                    style="width: 300px;height:30px;margin: 10px"></el-input>
-          <el-button type="primary" @click="search1" style="height: 30px ;margin: 10px">搜索</el-button>
-        </el-row>
-      </el-col>
-    </el-form-item>
-  </el-form>
   <el-card>
     <template #header>
       <div class="clearfix">
-        <span>展示项目: {{ pname }}</span>
+        <span>成本支出</span>
       </div>
     </template>
-    <div id="myChart1"
-         :style="{width: '500px', height: '300px',margin:'10px'}"></div>
+    <div :id="p"
+         :style="{width: '400px', height: '300px',margin:'10px'}"
+         ref="chart"
+    ></div>
   </el-card>
+  <el-dialog v-model="dialogFormVisible" title="支出明细">
+    <el-table :data="tableData" border stripe style="width: 100%" v-loading="loading">
+      <el-table-column prop="id" label="记录编号"/>
+      <el-table-column prop="name" label="名称"/>
+      <el-table-column prop="type" label="支出类型"/>
+      <el-table-column prop="money" label="支出金额(万元)"/>
+      <el-table-column prop="pid" label="项目编号"/>
+      <el-table-column prop="note" label="备注"/>
+      <el-table-column type="date" prop="date" label="记录日期"/>
+    </el-table>
+  </el-dialog>
 </template>
 
 <script>
-import {getCurrentInstance, inject, reactive, ref} from "vue";
+import {getCurrentInstance, inject, reactive, ref, shallowReactive} from "vue";
 import * as echarts from "echarts";
 
 export default {
-  name: "costpie",
-  setup() {
+  name: "costpie1",
+  props: ['pid'],
+  setup(props, context) {
     const currentInstance = getCurrentInstance()
     const {$http} = currentInstance.appContext.config.globalProperties
 
+    //点击饼图弹出对话框
+    let dialogFormVisible = ref(false)
+    const tableData = shallowReactive([]);
+    const loading =ref(false)
+    //饼图相关
+    let p = ref(null);
+    p = Math.round(Math.random() * 100)
+    const chart = ref(null);
     let bgColor = '#fff';
     let title = '总支出';
     let color = [
@@ -113,14 +119,8 @@ export default {
     let total;
     let option;
     let myChart1;
-    let pname = ref(null);
-    const form = reactive({
-      pname: '',
-      pid:'',
-    })
     const reload = inject('reload');
-    let pid = 1;
-    //show(pid);
+
     function show(pid) {
       $http.get('/costtypebypid?pid=' + pid, {}).then(res => {
         for (let i = 0; i < res.data.length; i++) {
@@ -129,7 +129,7 @@ export default {
         total = echartData.reduce((a, b) => {
           return accAdd(a, b.value)
         }, 0);
-        console.log(total);
+        //console.log(total);
         option = {
           backgroundColor: bgColor,
           color: 'red',
@@ -224,38 +224,50 @@ export default {
           }]
         };
         if (myChart1 == null) {
-          myChart1 = echarts.init(document.getElementById("myChart1"));
+          myChart1 = echarts.init(document.getElementById(p));
         }
         myChart1.setOption(option);
-        myChart1.on('click',function (params)
-        {
-
-          console.log(params.data.name);
-        })
         myChart1.resize();
+        myChart1.on('click', function (params) {
+          //console.log(params.name)
+          loading.value=true
+          $http.get('/findByPidAndType?pid=' + props.pid + '&type=' + params.name).then(res => {
+            tableData.splice(0, tableData.length);
+            for (let i = 0; i < res.data.length; i++) {
+              tableData.push({
+                id: res.data[i].mid,
+                name: res.data[i].name,
+                type: res.data[i].type,
+                money: res.data[i].money,
+                pid: res.data[i].pid,
+                note: res.data[i].note,
+                date: res.data[i].updatedate
+              })
+            }
+          })
+          loading.value=false
+          dialogFormVisible.value = true
+        },)
+
       })
     }
-
-    function search() {
-      pname = form.pname;
-      //console.log(form.pname);
-      $http.get('/searchproject?pname=' + form.pname, {}).then(response => {
-        pid = response.data[0].pid;
-        show(pid);
-        //reload();
-      })
-    }
-    function search1(){
-      show(form.pid)
-    }
-
+    let newPromise = new Promise((resolve) => {
+      resolve()
+    })
+    //然后异步执行echarts的初始化函数
+    newPromise.then(() => {
+      //console.log(props.pid)
+      show(props.pid)
+    })
     return {
-      form,
-      pname,
-      search,
-      search1,
+      loading,
+      chart,
+      p,
+      dialogFormVisible,
+      tableData,
     }
-  }
+  },
+
 }
 </script>
 

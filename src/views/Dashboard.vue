@@ -112,18 +112,17 @@ export default {
   name: "dashboard",
   components: {Schart},
   setup() {
-    const name = localStorage.getItem("ms_username");
+    const store = useStore();
+
+    const name = store.state.user.username;
     const role = name === "admin" ? "超级管理员" : "普通用户";
     const date =moment().format("YYYY-MM-DD");
 
     //头像上传
-    const store = useStore();
     const imgUrl = ref('');
     const handleImgSrc = async () => {
-      //let m=await import(store.state.user.photo);
+      //从store中存储的user获取当前登录用户的头像信息
       imgUrl.value = store.state.user.photo;
-      console.log(store.state.user.photo)
-
     }
 
     onMounted(() => {

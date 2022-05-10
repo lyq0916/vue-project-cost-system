@@ -183,8 +183,9 @@ interface Project {
 
 const handleShow = (index: number, row: Project) => {
   //console.log(row.pid);
-  visible1.value = true;
+  visible.value = true;
   $http.get('/getprojectbyid?pid=' + row.pid, {}).then(response => {
+    tableData1.splice(0,tableData1.length)
     tableData1.push({
       id: response.data.pid,
       name: response.data.pname,
@@ -232,6 +233,10 @@ function cancel2() {
 }
 
 function submitDialog2() {
+  //设为已完工 --
+  // 1.填入const_project完工日期
+  //2.const_project状态设为已完工
+  //3.project状态设为已完工
   $http.get('/end?pid=' + pid + '&end=' + end.value).then(response => {
     if (response.data.code == 200) {
       ElMessage.success("修改成功");

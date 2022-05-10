@@ -5,7 +5,7 @@
         <el-breadcrumb-item>
           <i class="el-icon-lx-calendar"></i> 表单
         </el-breadcrumb-item>
-        <el-breadcrumb-item>成本维护</el-breadcrumb-item>
+        <el-breadcrumb-item>施工日志</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <div class="container">
@@ -36,42 +36,22 @@
           </el-form>
         </div>
         <el-table :data="tableData" border stripe style="width: 100%">
-          <el-table-column prop="id" label="记录编号"/>
-          <el-table-column prop="name" label="名称"/>
-          <el-table-column prop="type" label="支出类型"/>
-          <el-table-column prop="money" label="支出金额(万元)"/>
           <el-table-column prop="pid" label="项目编号"/>
-          <el-table-column prop="note" label="备注"/>
+          <el-table-column prop="pname" label="项目名"/>
+          <el-table-column prop="note" label="日志详情"/>
           <el-table-column type="date" prop="date" label="记录日期"/>
         </el-table>
       </div>
     </div>
-    <!-- 新增成本维护记录 弹出表单对话框-->
-    <el-dialog v-model="dialogFormVisible" title="成本支出记录">
+    <el-dialog v-model="dialogFormVisible" title="施工日志">
       <el-form :model="form">
-        <el-form-item label="记录名称" :label-width="formLabelWidth" prop="name">
-          <el-input v-model="form.name" autocomplete="off"/>
-        </el-form-item>
-        <el-form-item label="支出类型" :label-width="formLabelWidth" prop="type">
-          <el-select v-model="form.type" placeholder="Please select type">
-            <el-option label="材料费用" value="材料"/>
-            <el-option label="机械设备" value="机械设备"/>
-            <el-option label="人工费用" value="人工"/>
-            <el-option label="间接费用" value="间接支出"/>
-            <el-option label="其他" value="其他"/>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="支出金额" :label-width="formLabelWidth" prop="money">
-          <el-input-number v-model="num" :precision="2" :step="0.1"/>
-          <span style="margin-left: 10px">万元</span>
-        </el-form-item>
-        <el-form-item label="项目编号" :label-width="formLabelWidth" prop="id">
+        <el-form-item label="项目编号" prop="id" label-width=140px>
           <el-input v-model="form.pid"/>
         </el-form-item>
-        <el-form-item label="备注" :label-width="formLabelWidth" prop="note">
+        <el-form-item label="备注" prop="note" label-width=140px>
           <el-input v-model="form.note" :rows="3" placeholder="Please input"></el-input>
         </el-form-item>
-        <el-form-item label="支出日期" :label-width="formLabelWidth" prop="date">
+        <el-form-item label="记录日期" prop="date" label-width=140px>
           <el-date-picker
               type="date"
               placeholder="请选择日期"
@@ -92,79 +72,66 @@
   </div>
 </template>
 
-<script setup>
-import {ref, reactive, getCurrentInstance, shallowReactive, inject} from 'vue'
+<script lang="ts" setup>
+import {getCurrentInstance, inject, reactive, ref, shallowReactive} from "vue";
 import {ElMessage} from "element-plus";
 
 const currentInstance = getCurrentInstance();
 const {$http} = currentInstance.appContext.config.globalProperties;
-
-const reload=inject('reload')
-
-//新增记录 表单数据
-let dialogFormVisible = ref(false)
-const formLabelWidth = '140px'
-const num = ref(1)
+const reload = inject('reload')
 
 const tableData = shallowReactive([]);
-
-$http.get('/costshow').then(res => {
+$http.get('/logshow').then(res => {
   for (let i = 0; i < res.data.length; i++) {
     tableData.push({
-      id: res.data[i].mid,
-      name: res.data[i].name,
-      type: res.data[i].type,
-      money: res.data[i].money,
       pid: res.data[i].pid,
+      pname: res.data[i].pname,
       note: res.data[i].note,
-      date: res.data[i].updatedate
+      date: res.data[i].date,
     })
   }
 })
-
-const form = reactive({
-  name: '',
-  type: '',
-  pid: '',
-  note: '',
+//搜索
+const form1 = reactive({
   date: '',
-})
-
-const form1=reactive({
-  date:'',
-  pname:'',
+  pname: '',
 })
 
 function search() {
-  $http.get('/searchcost?pname='+form1.pname+'&date='+form1.date,{}).then(res => {
+  $http.get('/searchlog?pname=' + form1.pname + '&date=' + form1.date).then(res => {
     tableData.splice(0, tableData.length);
     for (let i = 0; i < res.data.length; i++) {
       tableData.push({
-        id: res.data[i].mid,
-        name: res.data[i].name,
-        type: res.data[i].type,
-        money: res.data[i].money,
         pid: res.data[i].pid,
+        pname: res.data[i].pname,
         note: res.data[i].note,
-        date: res.data[i].updatedate
+        date: res.data[i].date,
       })
     }
   })
 }
 
+//新增记录表单
+let dialogFormVisible = ref(false)
+const form = reactive({
+  pid: '',
+  note: '',
+  date: '',
+})
+
+//取消
 function cancel() {
-  dialogFormVisible.value=false;
+  dialogFormVisible.value = false;
 }
+
+//提交
 function submitDialog() {
   const date = new Date(Date.parse(form.date));
-  $http.post('/costadd', {
-    name: form.name,
-    type: form.type,
-    money: num.value,
+  $http.post('/logadd', {
     pid: form.pid,
     note: form.note,
-    updatedate: date,
-  }).then((res => {
+    date: form.date,
+  }).then(res => {
     if (res.data.code == 200) {
       dialogFormVisible.value = false;
       ElMessage.success("提交成功");
@@ -172,12 +139,11 @@ function submitDialog() {
     } else {
       ElMessage.error("提交失败");
     }
-  }))
+  })
 }
-
 </script>
 
-<style>
+<style scoped>
 .table-header .header-right {
   position: absolute;
   right: 5px;
@@ -186,5 +152,4 @@ function submitDialog() {
 .dialog-footer button:first-child {
   margin-right: 10px;
 }
-
 </style>

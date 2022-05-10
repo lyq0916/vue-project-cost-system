@@ -1,6 +1,6 @@
 <template>
   <div id="myChart6"
-       :style="{width: '1000px', height: '700px',margin:'10px'}"></div>
+       :style="{width: '1000px', height: '500px',margin:'10px'}"></div>
 </template>
 
 <script>
@@ -18,7 +18,6 @@ export default {
     const {$http} = currentInstance.appContext.config.globalProperties;
 
     $http.get("/costgroupByPid").then((res) => {
-      console.log(res);
       for(var i=0;i<res.data.length;i++){
         datas.push({affiliation:res.data[i][0],nums:res.data[i][1]});
       }
@@ -56,6 +55,7 @@ export default {
             show: false
           },
           splitLine: {
+            interval: 'auto',
             lineStyle: {
               color: "#b0c4de"
             }
@@ -88,7 +88,7 @@ export default {
             }
           }
         ],
-        dataZoom: [
+      /*  dataZoom: [
           // 前面显示
           {
             textStyle: false,
@@ -118,7 +118,7 @@ export default {
               }
             }
           }
-        ]
+        ]*/
       };
       let myChart6 = echarts.init(document.getElementById("myChart6"));
       myChart6.setOption(option);

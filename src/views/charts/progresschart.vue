@@ -1,6 +1,6 @@
 <template>
   <div id="myChart5"
-       :style="{width: '1000px', height: '500px',margin:'10px'}"></div>
+       :style="{width: '1000px', height: '600px',margin:'10px'}"></div>
 </template>
 
 <script>
@@ -30,32 +30,6 @@ export default {
     }
 
     var data = [];
-    /* {
-        name: "项目1",
-        //项目索引  计划开始日期   计划结束日期， 实际开始日期
-        value: [0, '2022-04-12', '2022-04-28', '2022-04-12']
-      },
-      {
-        name: "项目2",
-        value: [1, '2020-01-25', '2020-03-31', '2020-01-28']
-      },
-      {
-        name: "项目3",
-        value: [2, '2020-02-07', '2020-04-30', '2020-02-10']
-      },
-      {
-        name: "项目4",
-        value: [3, '2020-04-01', '2020-07-30', '']
-      },
-      {
-        name: "项目5",
-        value: [4, '2022-04-15', '2022-8-01', '']
-      },
-      {
-        name: "项目6",
-        value: [5, '2022-8-01', '2022-9-25', '']
-      }
-    * */
 
     //在渲染时，data中的每个数据项都会调用这个方法
     function renderItem(params, api) {
@@ -107,16 +81,9 @@ export default {
         //当前日期(毫秒值)
         var nowDate_millisecond = +echarts.number.parseDate(nowDateStr);
         //如果项目进度未完成或刚好完成。
-        //比如计划开始时间1月10日，计划结束时间1月20日，项目周期10天，实际开始时间1月10日，当前日期1月18日，说明项目进度未完成
-        //那么在渲染实际工期的进度条时，进度条的范围为1月10日至1月18日(实际开始日期至当前日期)
-        //比如计划开始时间1月10日，计划结束时间1月20日，项目周期10天，实际开始时间1月10日，当前日期1月20日，说明项目进度刚好完成
-        //那么在渲染实际工期的进度条时，进度条的范围为1月10日至1月20日(实际开始日期至当前日期)
         if ((nowDate_millisecond - practiceStartDate_millisecond) <= projectCycle_millisecond) {
-          //取当前日期(在屏幕上的像素值)
-          nowDate_or_practiceEndDate = api.coord([nowDate_millisecond, categoryIndex]);
-        } else {//比如计划开始时间1月10日，计划结束时间1月20日，项目周期10天，实际开始时间1月10日，当前日期1月22日，说明项目已结束
-          //那么在渲染实际工期的进度条时，进度条的范围应该是1月10日至1月20日(实际开始日期至实际结束日期)，
-          //而不是1月10日至1月22日(实际开始日期至当前日期)
+          nowDate_or_practiceEndDate=api.coord([api.value(4),categoryIndex])
+        } else {
           //实际结束日期(毫秒值)：实际开始日期(毫秒值) + 项目周期(毫秒值)
           var practiceEndDate_millisecond = practiceStartDate_millisecond + projectCycle_millisecond;
           //取实际结束日期(在屏幕上的像素值)
@@ -191,23 +158,13 @@ export default {
 
     let option;
 
-   /* let newPromise = new Promise((resolve) => {
-      resolve()
-    })
-    //然后异步执行echarts的初始化函数
-    newPromise.then(() => {
-      let myChart5 = echarts.init(document.getElementById("myChart5"));
-      myChart5.setOption(option);
-      myChart5.resize();
-    })*/
     const currentInstance = getCurrentInstance();
     const {$http} = currentInstance.appContext.config.globalProperties;
 
     $http.get("/getconstbeans").then((res) => {
-      //console.log(res);
       for(let i=0;i<res.data.length;i++){
         categories.push(res.data[i].pname);
-        data.push({name: res.data[i].pname,value: [i,res.data[i].estart,res.data[i].eend,res.data[i].start]})
+        data.push({name: res.data[i].pname,value: [i,res.data[i].estart,res.data[i].eend,res.data[i].start,res.data[i].end]})
       }
       option = {
         tooltip: {
@@ -223,6 +180,13 @@ export default {
             if (params.value[3]) {
               practiceStartDate = params.value[3];
               practiceStartDate_str = '实际开始日期：' + practiceStartDate + '<br/>';
+            }
+
+            var practiceEndDate = "";
+            var practiceEndDate_str = "";
+            if(params.value[4]){
+              practiceEndDate=params.value[4];
+              practiceEndDate_str='实际结束日期：'+practiceEndDate+'<br/>';
             }
 
             //项目周期(毫秒值)：计划结束日期 - 计划开始日期
@@ -245,21 +209,9 @@ export default {
               currentProgress_percentage_str = '当前进度：' + currentProgress_percentage + '%' + '<br/>';
             }
 
-            //实际结束时间
-            var practiceEndDate = "";
-            var practiceEndDate_str = "";
-            if (currentProgress_percentage == 100) {//如果项目进度已完成或项目已结束
-              //实际结束时间(毫秒值)：实际开始日期(毫秒值) + 项目周期(毫秒值)
-              var practiceEndDate_millisecond = +echarts.number.parseDate(practiceStartDate) + projectCycle_millisecond;
-              //实际结束时间(日期格式)
-              practiceEndDate = echarts.format.formatTime('yyyy-MM-dd', practiceEndDate_millisecond);
-              practiceEndDate_str = '实际结束日期：' + practiceEndDate + '<br/>';
-            }
             return params.name + '<br/>'
                 + '计划开始时间：' + planStartDate + '<br/>'
                 + '计划结束时间：' + planEndDate + '<br/>'
-                + '项目周期：' + projectCycle_days + '天<br/>'
-                + currentProgress_percentage_str
                 + practiceStartDate_str
                 + practiceEndDate_str
           }
@@ -268,7 +220,8 @@ export default {
           text: '项目进度',
           left: 'center'
         },
-        dataZoom: [
+
+       /* dataZoom: [
           {
             //区域缩放组件的类型为滑块，默认作用在x轴上
             type: 'slider',
@@ -300,7 +253,8 @@ export default {
             //区域缩放组件的过滤模式，weakFilter：在进行区域缩放时，允许图形的一部分在坐标系上(可见)，另一部分在坐标系外(隐藏)
             filterMode: 'weakFilter'
           }
-        ],
+        ],*/
+
         //图表底板
         grid: {
           x:80,
@@ -309,15 +263,28 @@ export default {
         },
         xAxis: {
           type: "time",//x轴类型为时间轴
-          min: 1646064000000,//最小值为2022-04-10
-          max: 1672416000000,//最大值为2022-12-31
+          //min: 1646064000000,//最小值为2022-04-10
+          //max: 1672416000000,//最大值为2022-12-31
+          axisLine: {lineStyle: {color: '#C7DEFF'}},
+          splitLine: {lineStyle: {color: '#C7DEFF'}},
           axisLabel: {
-            interval: 0,//强制显示所有标签
-          }
-
+            rotate: 40,
+            textStyle: {fontSize: 12, color: '#2B6BD1'},
+            //formatter: '{yyyy}-{MM}-{dd}',
+            formatter: function (value, index) {
+              // 格式化成月/日，只在第一个刻度显示年份
+              var date = new Date(value);
+              var texts = [(date.getMonth() + 1), date.getDate()];
+              if (index === 0) {
+                texts.unshift(date.getFullYear());
+              }
+              return texts.join('/');
+            }
+          },
         },
         yAxis: {
           data: categories,
+          interval: 'auto',
           axisTick: {
             alignWithLabel: true//保证刻度线和标签对齐，当boundaryGap为true的时候有效，不过boundaryGap默认就是true
           }

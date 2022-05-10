@@ -7,7 +7,23 @@ const routes = [
         redirect: '/login'
     },
     {
-        path: "/",
+        path: "/login",
+        name: "Login",
+        meta: {
+            title: '登录'
+        },
+        component: () => import ( /* webpackChunkName: "login" */ "../views/User/Login.vue")
+    },
+    {
+        path: "/register",
+        name: "Register",
+        meta: {
+            title: '注册'
+        },
+        component: () => import ( /* webpackChunkName: "register" */ "../views/User/Register.vue")
+    },
+    {
+        path: "/home",
         name: "Home",
         component: Home,
         children: [
@@ -17,7 +33,7 @@ const routes = [
                 meta: {
                     title: '系统首页'
                 },
-                component: () => import ( /* webpackChunkName: "dashboard" */ "../views/Dashboard.vue")
+                component: () => import("../views/Dashboard.vue")
             }, {
                 path: "/table",
                 name: "basetable",
@@ -151,7 +167,7 @@ const routes = [
                 meta: {
                     title: '建设中项目'
                 },
-                component:() =>import('../views/ConstProject/ConstProject.vue')
+                component: () => import('../views/ConstProject/ConstProject.vue')
             },
             {
                 path: '/datashow',
@@ -159,17 +175,43 @@ const routes = [
                 meta: {
                     title: '数据看板(单个项目)'
                 },
-                component:() =>import('../views/ConstProject/DataShow.vue')
+                component: () => import('../views/ConstProject/DataShow.vue')
+            },
+            {
+                path: '/constlog',
+                name: 'constlog',
+                meta: {
+                    title: '施工日志'
+                },
+                component: () =>import('../views/ConstProject/ConstLog.vue')
+            },
+            {
+                path: '/usermanager',
+                name: 'UserManager',
+                meta: {
+                    title: '用户管理'
+                },
+                component: () => import('../views/User/UserManager.vue')
+            },
+            {
+                path: '/myproject',
+                name: 'MyProject',
+                meta: {
+                    title: '负责项目详情'
+                },
+                component: () => import('../views/MyProject/MyProject.vue')
+            },
+            {
+                path: '/myprojectshow',
+                name: 'MyProjectShow',
+                meta: {
+                    title: '查看项目',
+                    keepAlive: true
+                },
+                component: () => import('../views/MyProject/DataShow.vue')
             }
         ]
-    }, {
-        path: "/login",
-        name: "Login",
-        meta: {
-            title: '登录'
-        },
-        component: () => import ( /* webpackChunkName: "login" */ "../views/Login.vue")
-    }
+    },
 ];
 
 const router = createRouter({
@@ -177,8 +219,8 @@ const router = createRouter({
     routes
 });
 
-router.beforeEach((to, from, next) => {
-    document.title = `${to.meta.title} | vue-manage-system`;
+/*router.beforeEach((to, from, next) => {
+    /!*document.title = `${to.meta.title} | vue-manage-system`;
     const role = localStorage.getItem('username');
     if (!role && to.path !== '/login') {
         next('/login');
@@ -187,7 +229,7 @@ router.beforeEach((to, from, next) => {
         role === 'admin' ? next() : next('/403');
     } else {
         next();
-    }
-});
+    }*!/
+});*/
 
 export default router;
