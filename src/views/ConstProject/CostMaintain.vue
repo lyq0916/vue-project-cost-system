@@ -41,7 +41,6 @@
           <el-table-column prop="type" label="支出类型"/>
           <el-table-column prop="money" label="支出金额(万元)"/>
           <el-table-column prop="pid" label="项目编号"/>
-          <el-table-column prop="note" label="备注"/>
           <el-table-column type="date" prop="date" label="记录日期"/>
         </el-table>
       </div>
@@ -116,7 +115,6 @@ $http.get('/costshow').then(res => {
       type: res.data[i].type,
       money: res.data[i].money,
       pid: res.data[i].pid,
-      note: res.data[i].note,
       date: res.data[i].updatedate
     })
   }
@@ -126,7 +124,6 @@ const form = reactive({
   name: '',
   type: '',
   pid: '',
-  note: '',
   date: '',
 })
 
@@ -145,7 +142,6 @@ function search() {
         type: res.data[i].type,
         money: res.data[i].money,
         pid: res.data[i].pid,
-        note: res.data[i].note,
         date: res.data[i].updatedate
       })
     }
@@ -162,7 +158,6 @@ function submitDialog() {
     type: form.type,
     money: num.value,
     pid: form.pid,
-    note: form.note,
     updatedate: date,
   }).then((res => {
     if (res.data.code == 200) {

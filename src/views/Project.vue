@@ -194,11 +194,11 @@
               <span style="margin-left: 10px">{{ scope.row.budget }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="已花成本" width="150">
+<!--          <el-table-column label="已花成本" width="150">
             <template #default="scope">
               <span style="margin-left: 10px">{{ scope.row.cost }}</span>
             </template>
-          </el-table-column>
+          </el-table-column>-->
         </el-table>
       </el-card>
     </el-row>

@@ -81,7 +81,7 @@ export default {
                 store.commit('isHeader', headerbean);
               }
             })
-            router.push("/dashboard")
+            router.push("/projectdetails")
           })
         } else {
           ElMessage.error("登录失败");

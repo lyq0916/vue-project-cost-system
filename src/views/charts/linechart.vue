@@ -56,6 +56,7 @@ const legend = {
 const grid = {top: '5%', left: '10%', right: '6%', bottom: '25%'};
 
 $http.get('/getSumByDate?pid=' + props.pid).then((res) => {
+  console.log(res)
   for(let i=0;i<res.data.length;i++){
     b.push([res.data[i]["date"],res.data[i]["sum"]])
   }

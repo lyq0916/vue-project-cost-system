@@ -255,11 +255,11 @@ const remoteMethod = (query: string) => {
 const onSubmit = () => {
   // 表单校验
   formRef.value.validate((valid) => {
-    if (!valid) {
+    if (valid) {
       $http.post('/getusr',{
         username:form.header
       }).then((res) => {
-        console.log(res.data.id)
+        //console.log(res.data.id)
         var date1 = new Date(Date.parse(form.date));
         $http.post('/projectadd', {
           pname: form.name,
@@ -273,10 +273,11 @@ const onSubmit = () => {
           obudget: o.value,
           ibudget: i.value,
           date: date1,
-
+          header:res.data.id,
         }).then((res => {
           if (res.data.code == 200) {
             ElMessage.success("提交成功");
+            formRef.value.resetFields();
           } else {
             ElMessage.error("提交失败");
           }

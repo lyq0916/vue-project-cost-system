@@ -34,9 +34,9 @@ let option;
 $http.get('/getcbByType?pid=' + props.pid).then(res => {
   budget.push(res.data["材料"]["预算"], res.data["机械设备"]["预算"], res.data["人工"]["预算"], res.data["其他"]["预算"], res.data["间接支出"]["预算"])
   cost.push(res.data["材料"]["实际"], res.data["机械设备"]["实际"], res.data["人工"]["实际"], res.data["其他"]["实际"], res.data["间接支出"]["实际"])
-  dataY.push((res.data["材料"]["实际"] / res.data["材料"]["预算"]).toFixed(2)*100, (res.data["机械设备"]["实际"] / res.data["机械设备"]["预算"]).toFixed(2)*100,
-      (res.data["人工"]["实际"] / res.data["人工"]["预算"]).toFixed(2)*100, (res.data["其他"]["实际"] / res.data["其他"]["预算"]).toFixed(2)*100,
-      (res.data["间接支出"]["实际"] / res.data["间接支出"]["预算"]).toFixed(2)*100
+  dataY.push((res.data["材料"]["实际"] / res.data["材料"]["预算"]).toFixed(2), (res.data["机械设备"]["实际"] / res.data["机械设备"]["预算"]).toFixed(2),
+      (res.data["人工"]["实际"] / res.data["人工"]["预算"]).toFixed(2), (res.data["其他"]["实际"] / res.data["其他"]["预算"]).toFixed(2),
+      (res.data["间接支出"]["实际"] / res.data["间接支出"]["预算"]).toFixed(2)
   )
   let myChart = echarts.init(document.getElementById(p));
   option = {
@@ -68,14 +68,14 @@ $http.get('/getcbByType?pid=' + props.pid).then(res => {
         splitLine: {
           show: false,
         },
-        name: '(%)',
+        name: '(比率)',
        /* max: '100',
         min: '0',*/
         scale: false,
         position: 'right',
         axisLabel: {
           show: true,
-          formatter: '{value} %', //右侧Y轴文字显示
+          formatter: '{value} ', //右侧Y轴文字显示
         },
       },
     ],

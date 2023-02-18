@@ -6,6 +6,7 @@
 <script>
 import * as echarts from "echarts";
 import {getCurrentInstance} from "vue";
+import moment from "moment";
 
 export default {
   name: "progresschart",
@@ -72,6 +73,7 @@ export default {
       if (api.value(3) !== '') {//如果实际开始日期不为空
         //实际开始日期(在屏幕上的像素值)
         var practiceStartDate = api.coord([api.value(3), categoryIndex]);
+        console.log(practiceStartDate)
         //当前日期或实际结束日期
         var nowDate_or_practiceEndDate;
         //项目周期(毫秒值)：计划结束日期(毫秒值) - 计划开始日期(毫秒值)
@@ -80,14 +82,15 @@ export default {
         var practiceStartDate_millisecond = +echarts.number.parseDate(api.value(3));
         //当前日期(毫秒值)
         var nowDate_millisecond = +echarts.number.parseDate(nowDateStr);
-        //如果项目进度未完成或刚好完成。
-        if ((nowDate_millisecond - practiceStartDate_millisecond) <= projectCycle_millisecond) {
-          nowDate_or_practiceEndDate=api.coord([api.value(4),categoryIndex])
+        if (!api.value(4)) {
+          //项目未完成
+          //取今天
+          var today=moment().format("YYYY-MM-DD");
+          nowDate_or_practiceEndDate=api.coord([today,categoryIndex])
         } else {
-          //实际结束日期(毫秒值)：实际开始日期(毫秒值) + 项目周期(毫秒值)
-          var practiceEndDate_millisecond = practiceStartDate_millisecond + projectCycle_millisecond;
+          //项目已完成
           //取实际结束日期(在屏幕上的像素值)
-          nowDate_or_practiceEndDate = api.coord([practiceEndDate_millisecond, categoryIndex]);
+          nowDate_or_practiceEndDate=api.coord([api.value(4),categoryIndex])
         }
 
         //使用graphic图形元素组件，绘制矩形
@@ -187,6 +190,9 @@ export default {
             if(params.value[4]){
               practiceEndDate=params.value[4];
               practiceEndDate_str='实际结束日期：'+practiceEndDate+'<br/>';
+            }else{
+              practiceEndDate=moment().format("YYYY-MM-DD");
+              practiceEndDate_str='正在建设中--今日是：'+practiceEndDate+'<br/>';
             }
 
             //项目周期(毫秒值)：计划结束日期 - 计划开始日期
@@ -220,40 +226,6 @@ export default {
           text: '项目进度',
           left: 'center'
         },
-
-       /* dataZoom: [
-          {
-            //区域缩放组件的类型为滑块，默认作用在x轴上
-            type: 'slider',
-            //区域缩放组件的过滤模式，weakFilter：在进行区域缩放时，允许图形的一部分在坐标系上(可见)，另一部分在坐标系外(隐藏)
-            filterMode: 'weakFilter',
-            showDataShadow: false,
-            top: 400,
-            height: 10,
-            //区域缩放组件边框颜色
-            borderColor: 'transparent',
-            //区域缩放组件边框背景
-            backgroundColor: '#e2e2e2',
-            //区域缩放组件上的手柄的样式
-            handleIcon: 'M10.7,11.9H9.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4h1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7v-1.2h6.6z M13.3,22H6.7v-1.2h6.6z M13.3,19.6H6.7v-1.2h6.6z', // jshint ignore:line
-            //手柄大小
-            handleSize: 30,
-            //为手柄设置阴影效果
-            handleStyle: {
-              shadowBlur: 6,
-              shadowOffsetX: 1,
-              shadowOffsetY: 2,
-              shadowColor: '#aaa'
-            },
-            labelFormatter: ''
-          },
-          {
-            //区域缩放组件的类型为内置在坐标系中，默认作用在x轴的坐标系中
-            type: 'inside',
-            //区域缩放组件的过滤模式，weakFilter：在进行区域缩放时，允许图形的一部分在坐标系上(可见)，另一部分在坐标系外(隐藏)
-            filterMode: 'weakFilter'
-          }
-        ],*/
 
         //图表底板
         grid: {

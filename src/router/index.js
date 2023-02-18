@@ -209,6 +209,46 @@ const routes = [
                     keepAlive: true
                 },
                 component: () => import('../views/MyProject/DataShow.vue')
+            },
+            {
+                path:'/labor',
+                name:'labor',
+                meta: {
+                    title: '人工劳务',
+                },
+                component:()=>import('../views/Cost/Labor.vue')
+            },
+            {
+                path:'/material',
+                name:'material',
+                meta:{
+                    title: '材料费用'
+                },
+                component:()=>import('../views/Cost/Material.vue')
+            },
+            {
+                path:'/equip',
+                name:'equip',
+                meta:{
+                    title: '机械设备'
+                },
+                component:()=>import('../views/Cost/Equip.vue')
+            },
+            {
+                path: '/other',
+                name:'other',
+                meta: {
+                    title: '其他'
+                },
+                component:()=>import('../views/Cost/Other.vue')
+            },
+            {
+                path: '/indirect',
+                name:'indirect',
+                meta: {
+                    title: '间接支出'
+                },
+                component:()=>import('../views/Cost/Indirect.vue')
             }
         ]
     },
@@ -218,18 +258,5 @@ const router = createRouter({
     history: createWebHashHistory(),
     routes
 });
-
-/*router.beforeEach((to, from, next) => {
-    /!*document.title = `${to.meta.title} | vue-manage-system`;
-    const role = localStorage.getItem('username');
-    if (!role && to.path !== '/login') {
-        next('/login');
-    } else if (to.meta.permission) {
-        // 如果是管理员权限则可进入，这里只是简单的模拟管理员权限而已
-        role === 'admin' ? next() : next('/403');
-    } else {
-        next();
-    }*!/
-});*/
 
 export default router;
