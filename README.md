@@ -7,8 +7,6 @@
 [English document](https://github.com/lin-xin/manage-system/blob/master/README_EN.md)
 
 ## 项目截图
-
-
 ### 登录
 
 ![Image text](https://github.com/lin-xin/manage-system/raw/master/screenshots/wms3.png)
